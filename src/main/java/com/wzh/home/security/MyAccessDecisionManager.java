@@ -1,5 +1,7 @@
 package com.wzh.home.security;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
  * @since 2020/11/3 15:27
  */
 @Component
+@Slf4j
 public class MyAccessDecisionManager implements AccessDecisionManager {
 
     /**
@@ -39,6 +42,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
         throws AccessDeniedException, InsufficientAuthenticationException {
+        log.info(String.valueOf(configAttributes.size()));
         if (null == configAttributes || configAttributes.size() <= 0) {
             return;
         }

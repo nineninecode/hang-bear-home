@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.wzh.home.utils.JwtUtil;
@@ -34,8 +34,9 @@ import com.wzh.home.utils.JwtUtil;
 @Slf4j
 public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
-        super(authenticationManager);
+    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,
+        AuthenticationEntryPoint authenticationEntryPoint) {
+        super(authenticationManager, authenticationEntryPoint);
     }
 
     @Override
@@ -46,8 +47,16 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(request, response);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        //try {
+            UsernamePasswordAuthenticationToken authentication = getAuthentication(request, response);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        //} catch (AuthenticationException failed) {
+        //    SecurityContextHolder.clearContext();
+        //    log.debug("Authentication request for failed!", failed);
+        //    onUnsuccessfulAuthentication(request, response, failed);
+        //    super.getAuthenticationEntryPoint().commence(request, response, failed);
+        //    return;
+        //}
         chain.doFilter(request, response);
     }
 

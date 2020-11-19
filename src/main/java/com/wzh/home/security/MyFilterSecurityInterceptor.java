@@ -7,9 +7,9 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
+import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.web.FilterInvocation;
-
-import com.foresealife.iam.client.filter.security.RoleBasedAclFilter;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -19,13 +19,11 @@ import com.foresealife.iam.client.filter.security.RoleBasedAclFilter;
  * @author weizhuohang
  * @since 2020/11/3 14:08
  */
-//@Component
+@Component
 public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
 
     @Autowired
     private MyInvocationSecurityMetadataSource securityMetadataSource;
-    @Autowired
-    private RoleBasedAclFilter roleBasedAclFilter;
 
     @Autowired
     public void setMyAccessDecisionManager(MyAccessDecisionManager myAccessDecisionManager) {
@@ -48,15 +46,13 @@ public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor imp
         // fi里面有一个被拦截的url
         // 里面调用obtainSecurityMetadataSource()返回对象的getAttributes(Object object)这个方法获取fi对应的所有权限
         // 再调用MyAccessDecisionManager的decide方法来校验用户的权限是否足够
-        // InterceptorStatusToken token = super.beforeInvocation(fi);
-        // try {
-        // // 执行下一个拦截器
-        // fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
-        // } finally {
-        // super.afterInvocation(token, null);
-        // }
-        // RoleBasedAclFilter roleBasedAclFilter = new RoleBasedAclFilter();
-        roleBasedAclFilter.doFilter(fi.getRequest(), fi.getResponse(), fi.getChain());
+         InterceptorStatusToken token = super.beforeInvocation(fi);
+         try {
+         // 执行下一个拦截器
+         fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
+         } finally {
+         super.afterInvocation(token, null);
+         }
     }
 
     @Override

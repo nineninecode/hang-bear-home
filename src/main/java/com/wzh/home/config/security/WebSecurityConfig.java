@@ -60,9 +60,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // 所有请求需要身份认证
             .antMatchers(withoutAuthUrlList).permitAll().anyRequest().authenticated().and().exceptionHandling()
             // 自定义认证失败处理器
-            .authenticationEntryPoint(customAuthenticationEntryPoint).accessDeniedHandler(customAccessDeniedHandler).and()
+            .authenticationEntryPoint(customAuthenticationEntryPoint).and()
             .addFilter(new JWTLoginFilter(authenticationManager()))
-            .addFilter(new JWTAuthenticationFilter(authenticationManager())).logout()
+            .addFilter(new JWTAuthenticationFilter(authenticationManager(),customAuthenticationEntryPoint)).logout()
             // 默认注销行为为logout，可以通过下面的方式来修改
             // .logoutUrl("/logout")
             // 设置注销成功后跳转页面，默认是跳转到登录页面;
