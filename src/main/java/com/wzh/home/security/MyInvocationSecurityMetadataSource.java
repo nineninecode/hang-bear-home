@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,12 +16,6 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-
-import com.foresealife.iam.client.api.IamServiceFactory;
-import com.foresealife.iam.client.config.IamConfig;
-import com.foresealife.iam.client.config.IamConfigFactory;
-import com.foresealife.iam.client.filter.security.AccessControl;
-import com.foresealife.iam.client.util.http.HttpGetServletPath;
 
 /**
  * <p>
@@ -35,9 +28,6 @@ import com.foresealife.iam.client.util.http.HttpGetServletPath;
 @Slf4j
 @Component
 public class MyInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
-
-    @Autowired
-    private IamServiceFactory iamServiceFactory;
 
     private AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -56,11 +46,6 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
      */
     public void loadResourceDefine() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        IamConfig iamConfig = IamConfigFactory.getInstance().getConfig();
-        this.ignoreRequestUrl = iamServiceFactory.getUnitService().getCasIgnoreUrlFromApi();
-        AccessControl aclFileFromNas =
-            iamServiceFactory.getAclService().getAclFileFromNas(iamConfig.getCompanyCode(), iamConfig.getUnitCode());
 
         map = new HashMap<>(64);
         Collection<ConfigAttribute> array;
@@ -105,22 +90,18 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
 
         String loginUserId = request.getRemoteUser();
 
-        // 获取用户在当前系统的角色信息
-        List<String> roleList = IamServiceFactory.getInstance().getUserService().getRoleList(loginUserId);
-
         if (isIgnoreRequest(request)) {
             return null;
         }
 
-
-        //String resUrl;
-        //for (Iterator<String> inter = map.keySet().iterator(); inter.hasNext();) {
-        //    resUrl = inter.next();
-        //    matcher = new AntPathRequestMatcher(resUrl);
-        //    if (matcher.matches(request)) {
-        //        return map.get(resUrl);
-        //    }
-        //}
+        // String resUrl;
+        // for (Iterator<String> inter = map.keySet().iterator(); inter.hasNext();) {
+        // resUrl = inter.next();
+        // matcher = new AntPathRequestMatcher(resUrl);
+        // if (matcher.matches(request)) {
+        // return map.get(resUrl);
+        // }
+        // }
         return null;
     }
 
@@ -143,7 +124,7 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
      */
     private boolean isIgnoreRequest(HttpServletRequest request) {
         boolean result = false;
-        String url = HttpGetServletPath.getServletPath(request);
+        String url = request.getRequestURI();
         for (String path : ignoreRequestUrl) {
             if (this.pathMatcher.isPattern(path)) {
                 if (this.pathMatcher.match(path, url)) {

@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import com.foresealife.iam.client.bean.IamUserInfo;
 import com.wzh.home.constant.JwtConstantKey;
+import com.wzh.home.entity.IamUserInfo;
 
 /**
  * <p>
@@ -72,12 +72,12 @@ public class JwtUtil {
         // 设置过期时间
         calendar.add(Calendar.MINUTE, VALID_MIN);
         Date time = calendar.getTime();
-        token = Jwts.builder().setSubject(userInfo.getUid())
-                    // 签发时间
-                    .setIssuedAt(now)
-                    // 过期时间
-                    .setExpiration(time).claim(CLAIM_NAME, userInfo.getCn()).claim(CLAIM_ACCOUNT, userInfo.getUid())
-                    .signWith(SignatureAlgorithm.HS512, JwtConstantKey.SIGNING_KEY).compact();
+        token = Jwts.builder().setSubject(userInfo.getUId())
+            // 签发时间
+            .setIssuedAt(now)
+            // 过期时间
+            .setExpiration(time).claim(CLAIM_NAME, userInfo.getCn()).claim(CLAIM_ACCOUNT, userInfo.getUId())
+            .signWith(SignatureAlgorithm.HS512, JwtConstantKey.SIGNING_KEY).compact();
         return token;
     }
 
@@ -104,7 +104,7 @@ public class JwtUtil {
 
         // 1. 签发时间 < 当前时间 < (签发时间+((token过期时间-token签发时间)/2)) 不刷新token
         // 2. (签发时间+((token过期时间-token签发时间)/2)) < 当前时间 < token过期时间 刷新token并返回给前端
-        // 3. tokne过期时间 < 当前时间 跳转登录，重新登录获取token
+        // 3. token过期时间 < 当前时间 跳转登录，重新登录获取token
         // 验证token时间有效性
         if ((issuedAt + ((expirationTime - issuedAt) / REFRESH_RATE)) < currentTimeMillis
             && currentTimeMillis < expirationTime) {

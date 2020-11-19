@@ -12,11 +12,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.foresealife.iam.client.api.IamServiceFactory;
-import com.foresealife.iam.client.bean.BaseResponse;
-import com.foresealife.iam.client.bean.IamUserInfo;
-import com.foresealife.iam.client.emum.PeopleType;
-
 /**
  * 自定义登录验证
  * 
@@ -25,12 +20,6 @@ import com.foresealife.iam.client.emum.PeopleType;
  */
 @Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-
-    private IamServiceFactory iamServiceFactory;
-
-    public CustomAuthenticationProvider(IamServiceFactory iamServiceFactory) {
-        this.iamServiceFactory = iamServiceFactory;
-    }
 
     /**
      * 执行与以下合同相同的身份验证 {@link AuthenticationManager＃authenticate（Authentication）} 。
@@ -54,28 +43,19 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
 
         // IAM 认证
-        BaseResponse response =
-            iamServiceFactory.getUserService().authenticateByPeopleType(PeopleType.STAFF, name, password);
-        log.debug("IAM response {}", response);
+        log.debug("IAM response {}", "");
 
-        if (!response.isSuccess()) {
-            throw new BadCredentialsException(response.getMsg());
+        if (true) {
+            throw new BadCredentialsException("response.getMsg()");
         } else {
-            IamUserInfo user = null;
             try {
                 // 获取IAM信息用户信息
-                user = iamServiceFactory.getUserService().getUserInfo(PeopleType.STAFF, name);
-                log.debug("login IamUserInfo is {}", user);
+                log.debug("login IamUserInfo is {}", "user");
             } catch (Exception e) {
                 throw new LockedException("IAM 异常");
             }
 
-            if (Boolean.valueOf(user.getQhIsActive()).equals(Boolean.FALSE)) {
-                // 离职
-                throw new LockedException("用户离职");
-            }
-
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user, null));
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("", null));
             Authentication auth = new UsernamePasswordAuthenticationToken(name, password, Collections.emptyList());
             return auth;
         }

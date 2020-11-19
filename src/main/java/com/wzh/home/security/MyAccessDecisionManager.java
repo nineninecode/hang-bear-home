@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
  * @author weizhuohang
  * @since 2020/11/3 15:27
  */
-@Component
 @Slf4j
+@Component
 public class MyAccessDecisionManager implements AccessDecisionManager {
 
     /**

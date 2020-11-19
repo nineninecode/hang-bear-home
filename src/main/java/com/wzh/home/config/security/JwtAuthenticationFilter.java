@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -32,9 +33,13 @@ import com.wzh.home.utils.JwtUtil;
  * @since 2020-10-28
  */
 @Slf4j
-public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
+public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager,
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+        super(authenticationManager);
+    }
+
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager,
         AuthenticationEntryPoint authenticationEntryPoint) {
         super(authenticationManager, authenticationEntryPoint);
     }
@@ -47,16 +52,16 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-        //try {
+        try {
             UsernamePasswordAuthenticationToken authentication = getAuthentication(request, response);
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        //} catch (AuthenticationException failed) {
-        //    SecurityContextHolder.clearContext();
-        //    log.debug("Authentication request for failed!", failed);
-        //    onUnsuccessfulAuthentication(request, response, failed);
-        //    super.getAuthenticationEntryPoint().commence(request, response, failed);
-        //    return;
-        //}
+        } catch (AuthenticationException failed) {
+            SecurityContextHolder.clearContext();
+            log.debug("Authentication request for failed!", failed);
+            onUnsuccessfulAuthentication(request, response, failed);
+            super.getAuthenticationEntryPoint().commence(request, response, failed);
+            return;
+        }
         chain.doFilter(request, response);
     }
 

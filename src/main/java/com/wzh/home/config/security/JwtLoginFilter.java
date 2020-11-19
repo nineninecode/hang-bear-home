@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.foresealife.iam.client.bean.IamUserInfo;
+import com.wzh.home.entity.IamUserInfo;
 import com.wzh.home.utils.JwtUtil;
 
 /**
@@ -32,13 +31,7 @@ import com.wzh.home.utils.JwtUtil;
  * @since 2020-10-28
  */
 @Slf4j
-public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
-
-    private AuthenticationManager authenticationManager;
-
-    public JWTLoginFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     /**
      * 尝试身份认证(接收并解析用户凭证)
@@ -49,7 +42,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         throws AuthenticationException {
         try {
             JSONObject user = new ObjectMapper().readValue(req.getInputStream(), JSONObject.class);
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+            return super.getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(
                 user.getString("username"), user.getString("password"), new ArrayList<>()));
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -1,9 +1,5 @@
 package com.wzh.home.config.security;
 
-import java.util.Arrays;
-import java.util.List;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
-import com.foresealife.iam.client.api.IamServiceFactory;
-import com.foresealife.iam.client.filter.security.RoleBasedAclFilter;
 
 /**
  * <p>
@@ -29,9 +22,6 @@ import com.foresealife.iam.client.filter.security.RoleBasedAclFilter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private IamServiceFactory iamServiceFactory;
-
-    @Autowired
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Autowired
     private CustomAccessDeniedHandlerImpl customAccessDeniedHandler;
@@ -39,36 +29,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 需要放行的URL
      */
-    private static final String[] AUTH_WHITELIST = {"/v2/api-docs-ext", "/v2/api-docs", "/webjars/**",
-        "/swagger-resources/**", "/doc.html", "/user-info/get", "hgmc-store-product/publish", "hgmc-store-sku/*",
-        // 类目导出
-        "/hgmc-front-category/getFirstCategory", "/hgmc-front-category/getSecondCategory/*","/error"
-        // other public endpoints of your API may be appended to this array
-    };
+    private static final String[] AUTH_WHITELIST = {/*"/error"*/};
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        // 获取iam中配置的白名单
-        List<String> urlList = iamServiceFactory.getUnitService().getCasIgnoreUrlFromApi();
-        urlList.addAll(Arrays.asList(AUTH_WHITELIST));
-        String[] withoutAuthUrlList = new String[urlList.size()];
-        urlList.toArray(withoutAuthUrlList);
-
-        http.cors().and().csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        http.cors().and().csrf().disable()
+            // 不需要session
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            // 访问资源开启身份验证
             .and().authorizeRequests()
+            // 放行的资源
+            .antMatchers(AUTH_WHITELIST).permitAll()
             // 所有请求需要身份认证
-            .antMatchers(withoutAuthUrlList).permitAll().anyRequest().authenticated().and().exceptionHandling()
+            .anyRequest().authenticated().and()
+            // 添加自定义filter
+            .addFilter(jwtLoginFilter()).addFilter(jwtAuthenticationFilter())
+            // 注册自定义异常处理器
+            .exceptionHandling()
             // 自定义认证失败处理器
-            .authenticationEntryPoint(customAuthenticationEntryPoint).and()
-            .addFilter(new JWTLoginFilter(authenticationManager()))
-            .addFilter(new JWTAuthenticationFilter(authenticationManager(),customAuthenticationEntryPoint)).logout()
-            // 默认注销行为为logout，可以通过下面的方式来修改
-            // .logoutUrl("/logout")
-            // 设置注销成功后跳转页面，默认是跳转到登录页面;
-            .logoutSuccessUrl("/login")
-            // .logoutSuccessHandler(customLogoutSuccessHandler)
-            .permitAll();
+            .authenticationEntryPoint(customAuthenticationEntryPoint);
     }
 
     /**
@@ -80,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 使用自定义身份验证组件
-        auth.authenticationProvider(new CustomAuthenticationProvider(iamServiceFactory));
+        auth.authenticationProvider(new CustomAuthenticationProvider());
     }
 
     /**
@@ -95,5 +75,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     RoleBasedAclFilter roleBasedAclFilter() {
         RoleBasedAclFilter roleBasedAclFilter = new RoleBasedAclFilter();
         return roleBasedAclFilter;
+    }
+
+    @Autowired
+    private LoginFailHandler loginFailHandler;
+
+    @Bean
+    public JwtLoginFilter jwtLoginFilter() throws Exception {
+        JwtLoginFilter filter = new JwtLoginFilter();
+        filter.setAuthenticationManager(authenticationManager());
+        // filter.setAuthenticationSuccessHandler(loginSuccessConfig);
+        filter.setAuthenticationFailureHandler(loginFailHandler);
+        // filter.setRequiresAuthenticationRequestMatcher(new RegexRequestMatcher("/login", "POST"));
+        return filter;
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        JwtAuthenticationFilter filter =
+            new JwtAuthenticationFilter(authenticationManager(), customAuthenticationEntryPoint);
+        return filter;
     }
 }
