@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -65,7 +64,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             log.debug("authentication {}", JSON.toJSONString(authentication));
             User userInfo = (User)authentication.getPrincipal();
             log.debug("user info is {}", JSON.toJSONString(userInfo));
-            token = JwtUtil.generateToken(userInfo);
+            token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getName());
             log.debug("token {}", token);
 
             // 登录成功后，返回token到header里面

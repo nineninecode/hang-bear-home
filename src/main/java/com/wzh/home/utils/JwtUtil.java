@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import com.wzh.home.constant.JwtConstantKey;
 
 /**
@@ -57,8 +56,10 @@ public class JwtUtil {
     /**
      * 根据账户信息生成token
      * 
-     * @param userInfo
-     *            账户信息
+     * @param username
+     *            账户
+     * @param name
+     *            名称
      * @return token
      */
     public static String generateToken(String username, String name) {
