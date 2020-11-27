@@ -5,7 +5,7 @@ server:
 
 custom:
   security:
-    ingore:
+    ignore:
       url: /login
       url-array: /login,/hello/**
       url-list[0]: /login
