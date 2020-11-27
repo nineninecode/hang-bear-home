@@ -14,8 +14,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class HangBearHomeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HangBearHomeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(HangBearHomeApplication.class, args);
+    }
 
 }
