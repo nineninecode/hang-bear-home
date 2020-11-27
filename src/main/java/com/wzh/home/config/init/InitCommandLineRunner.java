@@ -26,7 +26,7 @@ public class InitCommandLineRunner implements CommandLineRunner {
     private CustomIgnoreUrlProperties customIgnoreUrlProperties;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         log.info("url {}", customIgnoreUrlProperties.getUrl());
         log.info("url-array {}", Arrays.toString(customIgnoreUrlProperties.getUrlArray()));
         log.info("url-list {}", customIgnoreUrlProperties.getUrlList());
