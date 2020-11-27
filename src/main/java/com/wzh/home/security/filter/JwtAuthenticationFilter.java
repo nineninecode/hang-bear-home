@@ -1,4 +1,4 @@
-package com.wzh.home.config.security;
+package com.wzh.home.security.filter;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

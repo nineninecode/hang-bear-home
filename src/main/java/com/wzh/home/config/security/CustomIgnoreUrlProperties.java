@@ -2,12 +2,14 @@ package com.wzh.home.config.security;
 
 import lombok.Data;
 
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
  * <p>
- * 文件上传配置
+ * 自定义配置--security ignore url
  * </p>
  *
  * @author weizhuohang
@@ -23,5 +25,15 @@ public class CustomIgnoreUrlProperties {
      * security 访问忽略
      */
     private String url;
+
+    /**
+     * security 访问忽略
+     */
+    private List<String> urlList;
+
+    /**
+     * security 访问忽略
+     */
+    private String[] urlArray;
 
 }

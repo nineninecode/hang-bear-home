@@ -12,7 +12,6 @@ import java.util.Map;
 
 
 import com.wzh.home.constant.JwtConstantKey;
-import com.wzh.home.entity.IamUserInfo;
 
 /**
  * <p>
@@ -48,12 +47,12 @@ public class JwtUtil {
     /**
      * token 姓名 key
      */
-    public static final String CLAIM_NAME = "cn";
+    public static final String CLAIM_NAME = "name";
 
     /**
      * token 账号 key
      */
-    public static final String CLAIM_ACCOUNT = "uid";
+    public static final String CLAIM_ACCOUNT = "username";
 
     /**
      * 根据账户信息生成token
@@ -62,7 +61,7 @@ public class JwtUtil {
      *            账户信息
      * @return token
      */
-    public static String generateToken(IamUserInfo userInfo) {
+    public static String generateToken(String username, String name) {
 
         String token;
         Calendar calendar = Calendar.getInstance();
@@ -72,11 +71,11 @@ public class JwtUtil {
         // 设置过期时间
         calendar.add(Calendar.MINUTE, VALID_MIN);
         Date time = calendar.getTime();
-        token = Jwts.builder().setSubject(userInfo.getUId())
+        token = Jwts.builder().setSubject(username)
             // 签发时间
             .setIssuedAt(now)
             // 过期时间
-            .setExpiration(time).claim(CLAIM_NAME, userInfo.getCn()).claim(CLAIM_ACCOUNT, userInfo.getUId())
+            .setExpiration(time).claim(CLAIM_NAME, name).claim(CLAIM_ACCOUNT, username)
             .signWith(SignatureAlgorithm.HS512, JwtConstantKey.SIGNING_KEY).compact();
         return token;
     }

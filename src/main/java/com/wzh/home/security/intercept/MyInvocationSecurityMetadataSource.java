@@ -1,4 +1,4 @@
-package com.wzh.home.security;
+package com.wzh.home.security.intercept;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-
 
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -19,7 +18,7 @@ import org.springframework.util.AntPathMatcher;
 
 /**
  * <p>
- * 权限元数据
+ * 自定义 security 权限元数据
  * </p>
  *
  * @author weizhuohang

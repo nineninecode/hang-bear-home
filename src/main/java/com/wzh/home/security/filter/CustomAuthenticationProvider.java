@@ -1,4 +1,4 @@
-package com.wzh.home.config.security;
+package com.wzh.home.security.filter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +41,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if (StringUtils.isBlank(password)) {
             throw new AuthenticationCredentialsNotFoundException("密码不能为空");
         }
-
+        name = "wzh";
+        password = "123456";
         // IAM 认证
         log.debug("IAM response {}", "");
 

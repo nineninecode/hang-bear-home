@@ -9,6 +9,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import com.wzh.home.security.filter.CustomAuthenticationProvider;
+import com.wzh.home.security.filter.JwtAuthenticationFilter;
+import com.wzh.home.security.filter.JwtLoginFilter;
+import com.wzh.home.security.handler.CustomAccessDeniedHandlerImpl;
+import com.wzh.home.security.handler.CustomAuthenticationEntryPoint;
+import com.wzh.home.security.handler.LoginFailHandler;
+
 /**
  * <p>
  * security web config
@@ -25,11 +32,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Autowired
     private CustomAccessDeniedHandlerImpl customAccessDeniedHandler;
+    @Autowired
+    private LoginFailHandler loginFailHandler;
 
     /**
      * 需要放行的URL
      */
-    private static final String[] AUTH_WHITELIST = {/*"/error"*/};
+    private static final String[] AUTH_WHITELIST = {"/**/**"};
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -62,23 +71,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 使用自定义身份验证组件
         auth.authenticationProvider(new CustomAuthenticationProvider());
     }
-
-    /**
-     * 注册自定义权限filter,IAM的权限过滤器
-     * <p>
-     * 放行的三种情况1：iam中白名单；2：iam中没有配置的url；3：iam配置且用户已经登录且角色符合
-     * <p/>
-     *
-     * @return RoleBasedAclFilter
-     */
-    @Bean
-    RoleBasedAclFilter roleBasedAclFilter() {
-        RoleBasedAclFilter roleBasedAclFilter = new RoleBasedAclFilter();
-        return roleBasedAclFilter;
-    }
-
-    @Autowired
-    private LoginFailHandler loginFailHandler;
 
     @Bean
     public JwtLoginFilter jwtLoginFilter() throws Exception {

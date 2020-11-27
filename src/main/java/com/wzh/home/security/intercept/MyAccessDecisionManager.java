@@ -1,4 +1,4 @@
-package com.wzh.home.security;
+package com.wzh.home.security.intercept;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * <p>
- * 代码描述
+ * 自定义 security 权限控制类
  * </p>
  *
  * @author weizhuohang

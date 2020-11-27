@@ -1,4 +1,4 @@
-package com.wzh.home.config.security;
+package com.wzh.home.security.handler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -6,7 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -17,7 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 
 /**
  * <p>
- * 代码描述
+ * 登录失败自定义处理器
  * </p>
  *
  * @author weizhuohang
@@ -29,9 +28,8 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException exception) throws IOException, ServletException {
-        // ResponseUtil.requestFail(401, exception.getMessage(), response);
 
-        //response.getWriter().write(401);
+        // response.getWriter().write(401);
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().print(JSONObject.toJSON(401));

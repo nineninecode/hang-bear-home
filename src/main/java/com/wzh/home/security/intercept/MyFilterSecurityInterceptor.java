@@ -1,4 +1,4 @@
-package com.wzh.home.security;
+package com.wzh.home.security.intercept;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ import org.springframework.security.web.FilterInvocation;
 
 /**
  * <p>
- * 权限拦截器
+ * 自定义 security 权限拦截器
  * </p>
  *
  * @author weizhuohang
