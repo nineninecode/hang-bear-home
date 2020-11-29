@@ -1,0 +1,12 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /hang-bear-home
+
+#custom:
+#  security:
+#    ignore:
+#      url: /login
+#      url-array: /login,/hello/**
+#      url-list[0]: /login
+#      url-list[1]: /hello/**
