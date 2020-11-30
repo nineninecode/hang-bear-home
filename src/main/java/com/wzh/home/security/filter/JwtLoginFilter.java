@@ -26,7 +26,7 @@ import com.wzh.home.utils.JwtUtil;
 /**
  * 自定义登录验证
  *
- * @author chihl
+ * @author weizhuohang
  * @since 2020-10-28
  */
 @Slf4j
@@ -59,13 +59,13 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = null;
         try {
 
-            log.debug("authentication {}", JSON.toJSONString(auth.getPrincipal()));
+            log.info("principal {}", JSON.toJSONString(auth.getPrincipal()));
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            log.debug("authentication {}", JSON.toJSONString(authentication));
-            User userInfo = (User)authentication.getPrincipal();
-            log.debug("user info is {}", JSON.toJSONString(userInfo));
+            log.info("authentication {}", JSON.toJSONString(authentication));
+            User userInfo = (User)auth.getPrincipal();
+            log.info("user info is {}", JSON.toJSONString(userInfo));
             token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getName());
-            log.debug("token {}", token);
+            log.info("token {}", token);
 
             // 登录成功后，返回token到header里面
             response.setCharacterEncoding("UTF-8");

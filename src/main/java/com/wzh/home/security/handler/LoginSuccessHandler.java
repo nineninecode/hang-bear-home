@@ -1,4 +1,4 @@
-package com.wzh.home.config.security;
+package com.wzh.home.security.handler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +25,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException, ServletException {
+        log.info("LoginSuccessHandler {}", authentication);
         // 认证成功之后这个方法取出来就是你的UserDetailsService返回的那个UserDetails
         // User user = (User)authentication.getPrincipal();
         // try {

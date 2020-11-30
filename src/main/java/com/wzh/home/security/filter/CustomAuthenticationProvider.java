@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -12,10 +11,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.wzh.home.entity.po.User;
+
 /**
  * 自定义登录验证
  * 
- * @author chihl
+ * @author weizhuohang
  * @since 2020-10-28
  */
 @Slf4j
@@ -43,21 +44,18 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
         name = "wzh";
         password = "123456";
-        // IAM 认证
-        log.debug("IAM response {}", "");
-
-        if (true) {
+        User loginUser = new User();
+        loginUser.setName(name);
+        loginUser.setUsername(name);
+        loginUser.setPassword(password);
+        if (false) {
             throw new BadCredentialsException("response.getMsg()");
         } else {
-            try {
-                // 获取IAM信息用户信息
-                log.debug("login IamUserInfo is {}", "user");
-            } catch (Exception e) {
-                throw new LockedException("IAM 异常");
-            }
+            // 获取IAM信息用户信息
+            log.debug("login user {}", loginUser);
 
-            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("", null));
-            Authentication auth = new UsernamePasswordAuthenticationToken(name, password, Collections.emptyList());
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(loginUser, null));
+            Authentication auth = new UsernamePasswordAuthenticationToken(loginUser, password, Collections.emptyList());
             return auth;
         }
 

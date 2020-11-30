@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.*;
 import java.io.IOException;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.web.FilterInvocation;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ import org.springframework.security.web.FilterInvocation;
  * @since 2020/11/3 14:08
  */
 @Slf4j
-// @Component
+@Component
 public class MyFilterSecurityInterceptor extends AbstractSecurityInterceptor implements Filter {
 
     @Autowired

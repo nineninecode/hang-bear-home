@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,8 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+
+import com.wzh.home.service.ResourceService;
 
 /**
  * <p>
@@ -28,12 +31,15 @@ import org.springframework.util.AntPathMatcher;
 @Component
 public class MyInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
-    private AntPathMatcher pathMatcher = new AntPathMatcher();
+    @Autowired
+    private ResourceService resourceService;
+
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     /**
-     * IAM白名单
+     * 白名单
      */
-    private List<String> ignoreRequestUrl = new ArrayList();
+    private List<String> ignoreRequestUrls = new ArrayList<>();
 
     /**
      * 每个资源（url）所需要的权限（角色）集合
@@ -45,6 +51,9 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
      */
     public void loadResourceDefine() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // 实时获取白名单
+        ignoreRequestUrls = resourceService.getIgnoreUrlList();
 
         map = new HashMap<>(64);
         Collection<ConfigAttribute> array;
@@ -88,6 +97,7 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
         HttpServletRequest request = ((FilterInvocation)object).getHttpRequest();
 
         String loginUserId = request.getRemoteUser();
+        log.info("request.getRemoteUser: {}", loginUserId);
 
         if (isIgnoreRequest(request)) {
             return null;
@@ -115,7 +125,7 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
     }
 
     /**
-     * 是否在IAM白名单中
+     * 是否在白名单中
      * 
      * @param request
      *            访问请求
@@ -124,15 +134,18 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
     private boolean isIgnoreRequest(HttpServletRequest request) {
         boolean result = false;
         String url = request.getRequestURI();
-        for (String path : ignoreRequestUrl) {
-            if (this.pathMatcher.isPattern(path)) {
+        for (String path : ignoreRequestUrls) {
+            if (path.equals(url)) {
+                result = true;
+                break;
+            }
+            // 判断是否符合antPathMatcher的规则
+            else if (this.pathMatcher.isPattern(path)) {
+                // 判断是否匹配
                 if (this.pathMatcher.match(path, url)) {
                     result = true;
                     break;
                 }
-            } else if (path.equals(url)) {
-                result = true;
-                break;
             }
         }
         return result;

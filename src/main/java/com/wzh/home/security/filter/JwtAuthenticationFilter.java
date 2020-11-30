@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -24,12 +23,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.wzh.home.entity.po.User;
 import com.wzh.home.utils.JwtUtil;
 
 /**
  * 鉴权过滤器
  * 
- * @author chihl
+ * @author weizhuohang
  * @since 2020-10-28
  */
 @Slf4j
@@ -87,15 +87,14 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             user = resultMap.get("account");
             log.info("user account: {}", user);
 
-            // 鉴权时设置用户信息，将用户信息设置到当前线程，结合mybatis plus食用
-            // UserInfoBo userInfoBo = new UserInfoBo();
-            // userInfoBo.setUserName(resultMap.get("name"));
-            // userInfoBo.setUserAccount(user);
-            // LoginUtils.set(userInfoBo);
-            // log.info("userInfo {}", JSON.toJSONString(userInfoBo));
+            // 获取用户角色列表，放入authentication中
+            User loginUser = new User();
+            loginUser.setName("韦卓航");
+            loginUser.setUsername("wzh");
+            loginUser.setPassword("123456");
 
             if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+                return new UsernamePasswordAuthenticationToken(loginUser, null, Collections.emptyList());
             }
         } catch (ExpiredJwtException e) {
             throw new AuthenticationServiceException("Token已过期", e);

@@ -21,7 +21,7 @@ import com.wzh.home.security.handler.LoginFailHandler;
  * security web config
  * </p>
  *
- * @author qujunjie
+ * @author weizhuohang
  * @since 2020-10-12
  */
 @Configuration
@@ -38,7 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 需要放行的URL
      */
-    private static final String[] AUTH_WHITELIST = {"/**/**"};
+    private static final String[] AUTH_WHITELIST = {};
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
