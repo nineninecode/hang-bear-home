@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @since 2020/11/19 22:28
  */
 @Data
-public class User implements Serializable {
+public class UmsUser implements Serializable {
 
     /**
      * 账号

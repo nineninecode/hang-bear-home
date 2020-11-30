@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wzh.home.entity.po.User;
+import com.wzh.home.entity.po.UmsUser;
 
 /**
  * <p>
@@ -24,8 +24,8 @@ public class HelloController {
     }
 
     @GetMapping("/hi")
-    public User sayHi() {
-        User user = new User();
+    public UmsUser sayHi() {
+        UmsUser user = new UmsUser();
         user.setUsername("wzh");
         user.setName("韦卓航");
         return user;

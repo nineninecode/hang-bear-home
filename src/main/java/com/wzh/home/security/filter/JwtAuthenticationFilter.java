@@ -11,19 +11,23 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.wzh.home.entity.po.User;
+import com.wzh.home.entity.po.UmsUser;
 import com.wzh.home.utils.JwtUtil;
 
 /**
@@ -88,13 +92,26 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
             log.info("user account: {}", user);
 
             // 获取用户角色列表，放入authentication中
-            User loginUser = new User();
+            UmsUser loginUser = new UmsUser();
             loginUser.setName("韦卓航");
             loginUser.setUsername("wzh");
             loginUser.setPassword("123456");
 
+            // 获取用户的角色信息
+            List<String> roles = new ArrayList<>();
+            roles.add("R_ADMIN");
+
+            List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+            for (String role : roles) {
+                if (role != null) {
+                    GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role);
+                    // 此处将权限信息添加到 GrantedAuthority 对象中，在后面进行全权限验证时会使用GrantedAuthority 对象。
+                    grantedAuthorities.add(grantedAuthority);
+                }
+            }
+
             if (user != null) {
-                return new UsernamePasswordAuthenticationToken(loginUser, null, Collections.emptyList());
+                return new UsernamePasswordAuthenticationToken(loginUser, null, grantedAuthorities);
             }
         } catch (ExpiredJwtException e) {
             throw new AuthenticationServiceException("Token已过期", e);

@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import com.wzh.home.security.filter.CustomAuthenticationProvider;
 import com.wzh.home.security.filter.JwtAuthenticationFilter;
@@ -15,6 +16,7 @@ import com.wzh.home.security.filter.JwtLoginFilter;
 import com.wzh.home.security.handler.CustomAccessDeniedHandlerImpl;
 import com.wzh.home.security.handler.CustomAuthenticationEntryPoint;
 import com.wzh.home.security.handler.LoginFailHandler;
+import com.wzh.home.security.intercept.MyFilterSecurityInterceptor;
 
 /**
  * <p>
@@ -34,6 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomAccessDeniedHandlerImpl customAccessDeniedHandler;
     @Autowired
     private LoginFailHandler loginFailHandler;
+    @Autowired
+    private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
 
     /**
      * 需要放行的URL
@@ -57,7 +61,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // 注册自定义异常处理器
             .exceptionHandling()
             // 自定义认证失败处理器
-            .authenticationEntryPoint(customAuthenticationEntryPoint);
+            .authenticationEntryPoint(customAuthenticationEntryPoint)
+            // 添加拦截器
+            .and().addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
 
     /**

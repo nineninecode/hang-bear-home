@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://119.45.117.123:3306/bear?characterEncoding=utf-8&useSSL=true&serverTimezone=GMT
+    username: xbear
+    password: xbear@lhang

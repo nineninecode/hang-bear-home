@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wzh.home.entity.po.User;
+import com.wzh.home.entity.po.UmsUser;
 import com.wzh.home.utils.JwtUtil;
 
 /**
@@ -62,7 +62,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             log.info("principal {}", JSON.toJSONString(auth.getPrincipal()));
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             log.info("authentication {}", JSON.toJSONString(authentication));
-            User userInfo = (User)auth.getPrincipal();
+            UmsUser userInfo = (UmsUser)auth.getPrincipal();
             log.info("user info is {}", JSON.toJSONString(userInfo));
             token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getName());
             log.info("token {}", token);

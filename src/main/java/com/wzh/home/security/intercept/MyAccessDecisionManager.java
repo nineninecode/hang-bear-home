@@ -3,7 +3,7 @@ package com.wzh.home.security.intercept;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
-import java.util.Iterator;
+
 
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
@@ -42,24 +42,25 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes)
         throws AccessDeniedException, InsufficientAuthenticationException {
-        log.info(String.valueOf(configAttributes.size()));
+
+        log.info("configAttributes {}", configAttributes);
         if (null == configAttributes || configAttributes.size() <= 0) {
+            // 放行
             return;
         }
-        ConfigAttribute c;
-        String needRole;
-        for (Iterator<ConfigAttribute> iter = configAttributes.iterator(); iter.hasNext();) {
-            c = iter.next();
-            needRole = c.getAttribute();
-            for (GrantedAuthority ga : authentication.getAuthorities()) {
-                // authentication 为在注释1 中循环添加到 GrantedAuthority
-                // 对象中的权限信息集合
-                if (needRole.trim().equals(ga.getAuthority())) {
+        for (ConfigAttribute configAttribute : configAttributes) {
+            // authentication对象中的权限信息集合
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+            for (GrantedAuthority ga : authorities) {
+                if (configAttribute.getAttribute().trim().equals(ga.getAuthority())) {
+                    // 放行
                     return;
                 }
             }
+
         }
-        throw new AccessDeniedException("no right");
+
+        throw new AccessDeniedException("no role!");
     }
 
     @Override

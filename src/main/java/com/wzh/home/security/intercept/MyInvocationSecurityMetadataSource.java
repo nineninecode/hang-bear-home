@@ -5,19 +5,19 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
-import com.wzh.home.service.ResourceService;
+import com.wzh.home.entity.bo.PermissionBo;
+import com.wzh.home.service.UmsPermissionService;
 
 /**
  * <p>
@@ -32,7 +32,9 @@ import com.wzh.home.service.ResourceService;
 public class MyInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
     @Autowired
-    private ResourceService resourceService;
+    private UmsPermissionService umsPermissionService;
+
+    private static final String ASTERISK_CHAR = "*";
 
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
@@ -42,35 +44,20 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
     private List<String> ignoreRequestUrls = new ArrayList<>();
 
     /**
-     * 每个资源（url）所需要的权限（角色）集合
+     * 访问权限列表
      */
-    private HashMap<String, Collection<ConfigAttribute>> map = null;
+    private List<PermissionBo> permissionBos = new ArrayList<>();
 
     /**
      * 加载权限
      */
     public void loadResourceDefine() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // 实时获取白名单
-        ignoreRequestUrls = resourceService.getIgnoreUrlList();
+        ignoreRequestUrls = umsPermissionService.getIgnoreUrlList();
+        // 实时获取所有权限
+        permissionBos = umsPermissionService.getAllPermissionBos();
 
-        map = new HashMap<>(64);
-        Collection<ConfigAttribute> array;
-        ConfigAttribute cfg;
-        List<String> permissions = new ArrayList<>();
-        permissions.add("/hgmc-channel-product/**");
-        permissions.add("/hgmc-channel-product/*");
-        permissions.add("/hello/*");
-        for (String permission : permissions) {
-            array = new ArrayList<>();
-            cfg = new SecurityConfig("lixj007");
-            // 此处只添加了用户的名字，其实还可以添加更多权限的信息，
-            // 例如请求方法到ConfigAttribute的集合中去。此处添加的信息将会作为MyAccessDecisionManager类的decide的第三个参数。
-            array.add(cfg);
-            // 用权限的getUrl() 作为map的key，用ConfigAttribute的集合作为 value，
-            map.put(permission, array);
-        }
     }
 
     /**
@@ -90,28 +77,21 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 
-        if (map == null) {
-            loadResourceDefine();
-        }
+        loadResourceDefine();
+
         // object 中包含用户请求的request 信息
         HttpServletRequest request = ((FilterInvocation)object).getHttpRequest();
 
         String loginUserId = request.getRemoteUser();
         log.info("request.getRemoteUser: {}", loginUserId);
+        request.getMethod();
 
         if (isIgnoreRequest(request)) {
             return null;
         }
-
-        // String resUrl;
-        // for (Iterator<String> inter = map.keySet().iterator(); inter.hasNext();) {
-        // resUrl = inter.next();
-        // matcher = new AntPathRequestMatcher(resUrl);
-        // if (matcher.matches(request)) {
-        // return map.get(resUrl);
-        // }
-        // }
-        return null;
+        Collection<ConfigAttribute> configAttributes = getRoles(request);
+        log.info("need roles: {}", configAttributes);
+        return configAttributes;
     }
 
     @Override
@@ -149,5 +129,38 @@ public class MyInvocationSecurityMetadataSource implements FilterInvocationSecur
             }
         }
         return result;
+    }
+
+    /**
+     * 获取权限角色
+     * 
+     * @param request
+     *            请求
+     * @return 角色权限
+     */
+    private Collection<ConfigAttribute> getRoles(HttpServletRequest request) {
+        Collection<ConfigAttribute> configAttributes = new ArrayList<>();
+        for (PermissionBo permissionBo : permissionBos) {
+            String url = request.getRequestURI();
+            String path = permissionBo.getPath();
+            String requestMethod = permissionBo.getRequestMethod();
+            String roleCode = permissionBo.getRoleCode();
+            // 请求方法控制为【*】，或者与request请求方法一致
+            if (!ASTERISK_CHAR.equals(requestMethod) && !requestMethod.equals(request.getMethod())) {
+                continue;
+            }
+            if (url.equals(path)) {
+                configAttributes.add(new SecurityConfig(roleCode));
+            }
+            // 判断是否符合antPathMatcher的规则
+            else if (this.pathMatcher.isPattern(path)) {
+                // 判断是否匹配
+                if (this.pathMatcher.match(path, url)) {
+                    configAttributes.add(new SecurityConfig(roleCode));
+                }
+            }
+        }
+
+        return configAttributes;
     }
 }

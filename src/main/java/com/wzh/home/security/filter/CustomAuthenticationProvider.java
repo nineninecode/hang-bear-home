@@ -11,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.wzh.home.entity.po.User;
+import com.wzh.home.entity.po.UmsUser;
 
 /**
  * 自定义登录验证
@@ -44,7 +44,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         }
         name = "wzh";
         password = "123456";
-        User loginUser = new User();
+        UmsUser loginUser = new UmsUser();
         loginUser.setName(name);
         loginUser.setUsername(name);
         loginUser.setPassword(password);
