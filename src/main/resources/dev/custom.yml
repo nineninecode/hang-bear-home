@@ -2,6 +2,6 @@ custom:
   security:
     ignore:
       url: /login
-      url-array: /login,/hello/**
+      url-array: /login
       url-list[0]: /login
       url-list[1]: /hello/**

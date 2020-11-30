@@ -38,14 +38,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private LoginFailHandler loginFailHandler;
     @Autowired
     private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
-
-    /**
-     * 需要放行的URL
-     */
-    private static final String[] AUTH_WHITELIST = {};
+    @Autowired
+    private CustomIgnoreUrlProperties customIgnoreUrlProperties;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        String[] AUTH_WHITELIST = customIgnoreUrlProperties.getUrlArray();
 
         http.cors().and().csrf().disable()
             // 不需要session
