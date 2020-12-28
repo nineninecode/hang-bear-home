@@ -22,18 +22,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
         Authentication authentication) throws IOException, ServletException {
         log.info("LoginSuccessHandler {}", authentication);
-        // 认证成功之后这个方法取出来就是你的UserDetailsService返回的那个UserDetails
-        // User user = (User)authentication.getPrincipal();
-        // try {
-        // String token = JwtUtil.genToken(user);
-        // response.addHeader(tokenHeader, tokenHead + " " + token);
-        // ResponseUtil.requestSuccess("登录成功", response);
-        // } catch (UnsupportedEncodingException e) {
-        // throw new IOException(e.getCause());
-        // }
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 import com.wzh.home.security.filter.CustomAuthenticationProvider;
 import com.wzh.home.security.filter.JwtAuthenticationFilter;
@@ -16,6 +17,7 @@ import com.wzh.home.security.filter.JwtLoginFilter;
 import com.wzh.home.security.handler.CustomAccessDeniedHandlerImpl;
 import com.wzh.home.security.handler.CustomAuthenticationEntryPoint;
 import com.wzh.home.security.handler.LoginFailHandler;
+import com.wzh.home.security.handler.LoginSuccessHandler;
 import com.wzh.home.security.intercept.MyFilterSecurityInterceptor;
 
 /**
@@ -34,6 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     @Autowired
     private CustomAccessDeniedHandlerImpl customAccessDeniedHandler;
+    @Autowired
+    private LoginSuccessHandler loginSuccessHandler;
     @Autowired
     private LoginFailHandler loginFailHandler;
     @Autowired
@@ -81,9 +85,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtLoginFilter jwtLoginFilter() throws Exception {
         JwtLoginFilter filter = new JwtLoginFilter();
         filter.setAuthenticationManager(authenticationManager());
-        // filter.setAuthenticationSuccessHandler(loginSuccessConfig);
         filter.setAuthenticationFailureHandler(loginFailHandler);
-        // filter.setRequiresAuthenticationRequestMatcher(new RegexRequestMatcher("/login", "POST"));
+        filter.setAuthenticationSuccessHandler(loginSuccessHandler);
+        // 设置登录url
+        filter.setRequiresAuthenticationRequestMatcher(new RegexRequestMatcher("/login", "POST"));
         return filter;
     }
 

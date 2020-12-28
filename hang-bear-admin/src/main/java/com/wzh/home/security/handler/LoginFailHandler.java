@@ -25,11 +25,12 @@ import com.alibaba.fastjson.JSONObject;
 @Slf4j
 @Component
 public class LoginFailHandler implements AuthenticationFailureHandler {
+
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException exception) throws IOException, ServletException {
 
-        // response.getWriter().write(401);
+        log.info("登录验证失败 {}", exception.getMessage());
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().print(JSONObject.toJSON(401));

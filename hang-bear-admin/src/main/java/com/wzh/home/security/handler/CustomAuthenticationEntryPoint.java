@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 
-//import com.bn.boot.base.result.BaseResult;
+// import com.bn.boot.base.result.BaseResult;
 
 /**
  * <p>
@@ -33,11 +32,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException authException) throws IOException, ServletException {
-        log.info("权限处理报错 {}", authException.toString());
 
-        //BaseResult<String> result = BaseResult.success(authException.getMessage());
+        log.info("认证报错 {}", authException.toString());
+
         String result = authException.getMessage();
-        log.info("权限处理报错 {}", result);
+        log.info("认证报错 {}", result);
         // 设置返回值
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setCharacterEncoding("utf-8");
