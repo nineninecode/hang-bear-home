@@ -1,22 +1,25 @@
 package com.wzh.home.entity.po;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * <p>
- * 用户信息类
+ * 用户信息表
  * </p>
  *
  * @author weizhuohang
  * @since 2020/11/19 22:28
  */
 @Data
-public class UmsUser implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@TableName("ums_user")
+public class UmsUser extends BasePo {
 
     /**
-     * 账号
+     * 登录账号
      */
     private String username;
 
@@ -26,8 +29,18 @@ public class UmsUser implements Serializable {
     private String password;
 
     /**
-     * 名称
+     * 头像
      */
-    private String name;
+    private String icon;
+
+    /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
+     * 昵称
+     */
+    private String nickName;
 
 }

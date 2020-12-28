@@ -1,19 +1,22 @@
 package com.wzh.home.entity.po;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * <p>
- * 代码描述
+ * 权限表
  * </p>
  *
  * @author weizhuohang
  * @since 2020/11/30 21:36
  */
 @Data
-public class UmsPermission implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+@TableName("ums_permission")
+public class UmsPermission extends BasePo {
 
     /**
      * 访问路径
