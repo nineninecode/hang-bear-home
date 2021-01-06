@@ -93,7 +93,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
             // 获取用户角色列表，放入authentication中
             UmsUser loginUser = new UmsUser();
-            loginUser.setName("韦卓航");
+            loginUser.setNickName("韦卓航");
             loginUser.setUsername("wzh");
             loginUser.setPassword("123456");
 

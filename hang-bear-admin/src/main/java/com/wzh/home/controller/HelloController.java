@@ -27,7 +27,7 @@ public class HelloController {
     public UmsUser sayHi() {
         UmsUser user = new UmsUser();
         user.setUsername("wzh");
-        user.setName("韦卓航");
+        user.setNickName("韦卓航");
         return user;
     }
 }

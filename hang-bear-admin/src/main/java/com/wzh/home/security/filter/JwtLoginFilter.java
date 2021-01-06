@@ -64,7 +64,7 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             log.info("authentication {}", JSON.toJSONString(authentication));
             UmsUser userInfo = (UmsUser)auth.getPrincipal();
             log.info("user info is {}", JSON.toJSONString(userInfo));
-            token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getName());
+            token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getNickName());
             log.info("token {}", token);
 
             // 登录成功后，返回token到header里面

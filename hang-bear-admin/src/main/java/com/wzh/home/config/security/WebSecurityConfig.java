@@ -8,10 +8,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
-import com.wzh.home.security.filter.CustomAuthenticationProvider;
+import com.wzh.home.security.CustomUserDetailServiceImpl;
 import com.wzh.home.security.filter.JwtAuthenticationFilter;
 import com.wzh.home.security.filter.JwtLoginFilter;
 import com.wzh.home.security.handler.CustomAccessDeniedHandlerImpl;
@@ -48,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        // 访问该接口时请求头依然带上了authorization token，则spring security还是会去校验
         String[] AUTH_WHITELIST = customIgnoreUrlProperties.getUrlArray();
 
         http.cors().and().csrf().disable()
@@ -55,12 +60,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             // 访问资源开启身份验证
             .and().authorizeRequests()
-            // 放行的资源
+            // 放行的资源。可以匿名访问
             .antMatchers(AUTH_WHITELIST).permitAll()
             // 所有请求需要身份认证
             .anyRequest().authenticated().and()
             // 添加自定义filter
-            .addFilter(jwtLoginFilter()).addFilter(jwtAuthenticationFilter())
+            .addFilter(jwtLoginFilter())
+            // .addFilterAt(jwtLoginFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilter(jwtAuthenticationFilter())
             // 注册自定义异常处理器
             .exceptionHandling()
             // 自定义认证失败处理器
@@ -78,7 +85,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 使用自定义身份验证组件
-        auth.authenticationProvider(new CustomAuthenticationProvider());
+        // 默认provider AbstractUserDetailsAuthenticationProvider
+        // 自定义provider auth.authenticationProvider(new CustomAuthenticationProvider())
+        // 可在这里配置使用userDetailService实现类；若不配置，默认选择容器中的userDetailService实现
+        auth.userDetailsService(new CustomUserDetailServiceImpl());
     }
 
     @Bean
@@ -97,5 +107,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         JwtAuthenticationFilter filter =
             new JwtAuthenticationFilter(authenticationManager(), customAuthenticationEntryPoint);
         return filter;
+    }
+
+    /**
+     * 使用DelegatingPasswordEncoder指定defaultPasswordEncoderForMatches
+     * 
+     * @return
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        DelegatingPasswordEncoder delegatingPasswordEncoder =
+            (DelegatingPasswordEncoder)PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        // 设置defaultPasswordEncoderForMatches为NoOpPasswordEncoder
+        delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(NoOpPasswordEncoder.getInstance());
+        return delegatingPasswordEncoder;
     }
 }

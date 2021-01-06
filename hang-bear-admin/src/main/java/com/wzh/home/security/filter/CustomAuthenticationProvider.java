@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.wzh.home.entity.po.UmsUser;
 
 /**
- * 自定义登录验证
+ * 自定义登录验证提供者
  * 
  * @author weizhuohang
  * @since 2020-10-28
@@ -45,7 +45,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         name = "wzh";
         password = "123456";
         UmsUser loginUser = new UmsUser();
-        loginUser.setName(name);
+        loginUser.setNickName(name);
         loginUser.setUsername(name);
         loginUser.setPassword(password);
         if (false) {

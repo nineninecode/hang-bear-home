@@ -76,7 +76,7 @@ public class CodeGenerator {
         // String projectPath = System.getProperty("user.dir");
         String projectPath = path;
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("jobob");
+        gc.setAuthor("wzh");
         gc.setOpen(false);
         // gc.setSwagger2(true); 实体属性 Swagger2 注解
         mpg.setGlobalConfig(gc);
