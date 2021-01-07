@@ -9,18 +9,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wzh.home.entity.po.UmsUser;
 import com.wzh.home.utils.JwtUtil;
 
 /**
@@ -62,9 +63,9 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
             log.info("principal {}", JSON.toJSONString(auth.getPrincipal()));
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             log.info("authentication {}", JSON.toJSONString(authentication));
-            UmsUser userInfo = (UmsUser)auth.getPrincipal();
+            User userInfo = (User)auth.getPrincipal();
             log.info("user info is {}", JSON.toJSONString(userInfo));
-            token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getNickName());
+            token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getUsername());
             log.info("token {}", token);
 
             // 登录成功后，返回token到header里面

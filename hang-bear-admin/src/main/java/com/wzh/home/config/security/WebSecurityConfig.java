@@ -3,19 +3,17 @@ package com.wzh.home.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
-import com.wzh.home.security.CustomUserDetailServiceImpl;
 import com.wzh.home.security.filter.JwtAuthenticationFilter;
 import com.wzh.home.security.filter.JwtLoginFilter;
 import com.wzh.home.security.handler.CustomAccessDeniedHandlerImpl;
@@ -82,14 +80,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      * @param auth
      * @throws Exception
      */
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // 使用自定义身份验证组件
-        // 默认provider AbstractUserDetailsAuthenticationProvider
-        // 自定义provider auth.authenticationProvider(new CustomAuthenticationProvider())
-        // 可在这里配置使用userDetailService实现类；若不配置，默认选择容器中的userDetailService实现
-        auth.userDetailsService(new CustomUserDetailServiceImpl());
-    }
+    // Spring Security在Spring加载完Bean之前就加载了，可能会出现userDetailService中出现诸如为null的情况
+    // @Override
+    // public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    // // 使用自定义身份验证组件
+    // // 默认provider AbstractUserDetailsAuthenticationProvider
+    // // 自定义provider auth.authenticationProvider(new CustomAuthenticationProvider())
+    // // 可在这里配置使用userDetailService实现类；若不配置，默认选择容器中的userDetailService实现
+    // //auth.userDetailsService(new CustomUserDetailServiceImpl());
+    // }
 
     @Bean
     public JwtLoginFilter jwtLoginFilter() throws Exception {
@@ -119,7 +118,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         DelegatingPasswordEncoder delegatingPasswordEncoder =
             (DelegatingPasswordEncoder)PasswordEncoderFactories.createDelegatingPasswordEncoder();
         // 设置defaultPasswordEncoderForMatches为NoOpPasswordEncoder
-        delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(NoOpPasswordEncoder.getInstance());
+        delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
         return delegatingPasswordEncoder;
     }
 }

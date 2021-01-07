@@ -1,5 +1,6 @@
 package com.wzh.home;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2020/10/30 15:14
  */
 @SpringBootApplication
+@MapperScan("com.wzh.home.mapper")
 public class HangBearHomeApplication {
 
     public static void main(String[] args) {

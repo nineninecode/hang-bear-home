@@ -3,11 +3,19 @@ package com.wzh.home.security;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
+import java.util.Objects;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.wzh.home.entity.po.UmsUser;
+import com.wzh.home.service.IUmsUserService;
 
 /**
  * <p>
@@ -18,7 +26,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * @since 2021/1/6 16:21
  */
 @Slf4j
+@Service
 public class CustomUserDetailServiceImpl implements UserDetailsService {
+
+    @Autowired
+    private IUmsUserService iUmsUserService;
 
     /**
      * Locates the user based on the username. In the actual implementation, the search may possibly be case sensitive,
@@ -34,7 +46,13 @@ public class CustomUserDetailServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails = new User("wzh", "123456", Collections.emptyList());
+        QueryWrapper<UmsUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", username);
+        UmsUser umsUser = iUmsUserService.getOne(queryWrapper);
+        if (Objects.isNull(umsUser)) {
+            throw new UsernameNotFoundException("该用户不存在！");
+        }
+        UserDetails userDetails = new User(umsUser.getUsername(), umsUser.getPassword(), Collections.emptyList());
         return userDetails;
     }
 }
