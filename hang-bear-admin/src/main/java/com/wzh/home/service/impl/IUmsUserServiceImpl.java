@@ -46,7 +46,15 @@ public class IUmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> imp
      * @return 注册结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean addUmsUser(UserEditForm userEditForm) {
+
+        QueryWrapper<UmsUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username", userEditForm.getUsername());
+        UmsUser one = this.getOne(queryWrapper);
+        if (Objects.nonNull(one)) {
+            throw new BizException("该账号已经存在！");
+        }
 
         UmsUser umsUser = new UmsUser();
         BeanUtils.copyProperties(userEditForm, umsUser);
@@ -89,6 +97,7 @@ public class IUmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> imp
      * @return 重置结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Boolean resetUserPassword(String username) {
 
         QueryWrapper<UmsUser> queryWrapper = new QueryWrapper<>();

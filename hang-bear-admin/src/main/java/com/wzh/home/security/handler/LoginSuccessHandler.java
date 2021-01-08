@@ -11,12 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.wzh.home.entity.bo.SecurityUser;
 import com.wzh.home.entity.result.BaseResult;
 import com.wzh.home.utils.JwtUtil;
 
@@ -46,9 +46,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             log.info("principal {}", JSON.toJSONString(authentication.getPrincipal()));
             Authentication authenticationContext = SecurityContextHolder.getContext().getAuthentication();
             log.info("authenticationContext {}", JSON.toJSONString(authenticationContext));
-            User userInfo = (User)authentication.getPrincipal();
+            SecurityUser userInfo = (SecurityUser)authentication.getPrincipal();
             log.info("user info is {}", JSON.toJSONString(userInfo));
-            token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getUsername());
+            token = JwtUtil.generateToken(userInfo.getUsername(), userInfo.getNickName());
             log.info("token {}", token);
             BaseResult<String> result = BaseResult.success(token);
 

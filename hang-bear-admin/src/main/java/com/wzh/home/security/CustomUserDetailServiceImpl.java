@@ -2,18 +2,17 @@ package com.wzh.home.security;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Collections;
 import java.util.Objects;
 
-
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.wzh.home.entity.bo.SecurityUser;
 import com.wzh.home.entity.po.UmsUser;
 import com.wzh.home.service.IUmsUserService;
 
@@ -52,7 +51,9 @@ public class CustomUserDetailServiceImpl implements UserDetailsService {
         if (Objects.isNull(umsUser)) {
             throw new UsernameNotFoundException("该用户不存在！");
         }
-        UserDetails userDetails = new User(umsUser.getUsername(), umsUser.getPassword(), Collections.emptyList());
-        return userDetails;
+        SecurityUser securityUser = new SecurityUser();
+        BeanUtils.copyProperties(umsUser, securityUser);
+        // UserDetails userDetails = new User(umsUser.getUsername(), umsUser.getPassword(), Collections.emptyList());
+        return securityUser;
     }
 }

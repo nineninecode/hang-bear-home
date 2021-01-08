@@ -5,7 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 /**
@@ -28,32 +30,39 @@ public class BasePo implements Serializable {
     private Long id;
 
     /**
+     * 创建人账户
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private String createdById;
+
+    /**
      * 创建人名称
      */
+    @TableField(fill = FieldFill.INSERT)
     private String createdBy;
 
     /**
      * 创建时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdTime;
+
+    /**
+     * 更新人账户
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private String updatedById;
 
     /**
      * 更新人名称
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updatedBy;
 
     /**
      * 更新时间
      */
-    private String updatedTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updatedTime;
 
-    /**
-     * 创建人id
-     */
-    private Long createdById;
-
-    /**
-     * 更新人id
-     */
-    private Long updatedById;
 }

@@ -17,6 +17,7 @@ import java.util.Map;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,10 +25,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.wzh.home.entity.po.UmsUser;
+import com.wzh.home.security.CustomUserDetailServiceImpl;
 import com.wzh.home.utils.JwtUtil;
 
 /**
@@ -38,6 +40,9 @@ import com.wzh.home.utils.JwtUtil;
  */
 @Slf4j
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
+
+    @Autowired
+    private CustomUserDetailServiceImpl customUserDetailService;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -76,7 +81,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         if (StringUtils.isBlank(token)) {
             throw new AuthenticationServiceException("Token为空");
         }
-        String user = null;
+        String username = null;
         try {
 
             Map<String, String> resultMap = JwtUtil.parseAndRefreshToken(token);
@@ -88,14 +93,11 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
 
             long end = System.currentTimeMillis();
             log.info("执行时间: {}", (end - start) + " 毫秒");
-            user = resultMap.get("account");
-            log.info("user account: {}", user);
+            username = resultMap.get("account");
+            log.info("user account: {}", username);
 
             // 获取用户角色列表，放入authentication中
-            UmsUser loginUser = new UmsUser();
-            loginUser.setNickName("韦卓航");
-            loginUser.setUsername("wzh");
-            loginUser.setPassword("123456");
+            UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
 
             // 获取用户的角色信息
             List<String> roles = new ArrayList<>();
@@ -110,8 +112,8 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
                 }
             }
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(loginUser, null, grantedAuthorities);
+            if (username != null) {
+                return new UsernamePasswordAuthenticationToken(userDetails, null, grantedAuthorities);
             }
         } catch (ExpiredJwtException e) {
             throw new AuthenticationServiceException("Token已过期", e);
