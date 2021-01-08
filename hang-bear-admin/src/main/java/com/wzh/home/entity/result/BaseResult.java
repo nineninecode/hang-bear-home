@@ -59,6 +59,10 @@ public class BaseResult<T> extends Result {
         return new BaseResult<>(resultCode);
     }
 
+    public static <T> BaseResult<T> fail(T data) {
+        return new BaseResult<T>(ResultCode.FAIL, data);
+    }
+
     public void setData(T data) {
         this.data = data;
     }

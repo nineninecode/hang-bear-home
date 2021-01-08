@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wzh.home.entity.result.BaseResult;
 
 /**
  * <p>
@@ -30,10 +31,11 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException exception) throws IOException, ServletException {
 
+        BaseResult<String> fail = BaseResult.fail(exception.getMessage());
         log.info("登录验证失败 {}", exception.getMessage());
         response.setCharacterEncoding("UTF-8");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().print(JSONObject.toJSON(401));
+        response.getWriter().print(JSONObject.toJSON(fail));
         response.getWriter().close();
     }
 }
