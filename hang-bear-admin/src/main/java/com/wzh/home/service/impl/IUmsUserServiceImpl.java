@@ -59,8 +59,7 @@ public class IUmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> imp
         UmsUser umsUser = new UmsUser();
         BeanUtils.copyProperties(userEditForm, umsUser);
         umsUser.setPassword(passwordEncoder.encode(customProperties.getDefaultPassword()));
-        Boolean saveBoolean = this.save(umsUser);
-        return saveBoolean;
+        return this.save(umsUser);
     }
 
     /**
