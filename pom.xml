@@ -6,6 +6,7 @@
     <modules>
         <module>mybatis-generator</module>
         <module>hang-bear-admin</module>
+        <module>laboratory</module>
     </modules>
 
     <parent>
