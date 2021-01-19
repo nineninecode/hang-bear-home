@@ -1,7 +1,6 @@
 package com.wzh.lab.demo;
 
 import java.awt.*;
-import java.awt.event.InputEvent;
 
 /**
  * <p>
@@ -17,14 +16,18 @@ public class Mouse {
         int width = new Double(d.getWidth()).intValue();
         int height = new Double(d.getHeight()).intValue();
         Robot robot = new Robot();
-        robot.mouseMove(3717-1920, 50);
-        robot.delay(1000);
-        robot.mousePress(InputEvent.BUTTON1_MASK);
+        //robot.mouseMove(3717-1920, 50);
+        //robot.delay(1000);
+        //robot.mousePress(InputEvent.BUTTON1_MASK);
+        //int maskForButton = MouseEvent.getMaskForButton(InputEvent.BUTTON1_MASK);
+        //System.out.println(maskForButton);
+        PointerInfo pointerInfo = MouseInfo.getPointerInfo();
+        System.out.println(pointerInfo.getLocation());
         //robot.mouseMove(width/2+100, height/2+100);
-        robot.mouseRelease(InputEvent.BUTTON1_MASK);
-        robot.mouseMove(1004,480);
+        //robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        //robot.mouseMove(1004,480);
         //robot.keyPress(56);
         // 获取屏幕分辨率
-        System.out.println(d);
+        //System.out.println(d);
     }
 }
