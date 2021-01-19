@@ -1,4 +1,4 @@
-package com.wzh.lab;
+package com.wzh.lab.utils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -165,8 +165,8 @@ public class ImageUtils {
     // }
 
     public static void main(String[] args) throws IOException {
-        String path1 = "D:/img/veigar.png";
-        String path2 = "D:/img/veigar2.png";
+        String path1 = "D:/img/1-pic.png";
+        String path2 = "D:/img/3-pic.png";
         String path3 = "D:/img/Nidalee.png";
         String imageSign1 = getImageSign(path1);
 

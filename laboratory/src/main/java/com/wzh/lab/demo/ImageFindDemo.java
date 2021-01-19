@@ -1,4 +1,4 @@
-package com.wzh.lab;
+package com.wzh.lab.demo;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

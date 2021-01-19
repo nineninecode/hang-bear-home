@@ -1,4 +1,4 @@
-package com.wzh.lab;
+package com.wzh.lab.demo;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
