@@ -3,9 +3,6 @@ package com.wzh.lab.demo;
 import java.awt.*;
 import java.awt.event.InputEvent;
 
-
-import com.sun.glass.events.MouseEvent;
-
 /**
  * <p>
  * 代码描述
