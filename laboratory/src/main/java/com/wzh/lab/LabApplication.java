@@ -1,12 +1,22 @@
 package com.wzh.lab;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.WinDef;
+import com.sun.jna.platform.win32.WinUser;
 import com.wzh.lab.utils.WinScreenUtils;
+import com.wzh.lab.win.KeyboardHook;
 
 /**
  * <p>
@@ -16,19 +26,63 @@ import com.wzh.lab.utils.WinScreenUtils;
  * @author weizhuohang
  * @since 2021/1/19 15:36
  */
+@Slf4j
 public class LabApplication {
     public static void main(String[] args) {
 
-        String path = "D:/img/3-pic.png";
-        BufferedImage screenShot = WinScreenUtils.getScreenShot(500, 200, 700, 200);
+        // 人物图片截图开始坐标列表
+        List<Point> imagePoints = new ArrayList<>();
 
-        // 输出流
-        try {
-            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(path));
-            ImageIO.write(screenShot, "PNG", out);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        // 桌面缩放比例，基准为96
+        BigDecimal baseScreen = new BigDecimal(96);
+        BigDecimal screenResolution = new BigDecimal(Toolkit.getDefaultToolkit().getScreenResolution());
+        BigDecimal ratio = screenResolution.divide(baseScreen, 2, BigDecimal.ROUND_HALF_UP);
+
+        // 起始位置x:960,y:1855，x每次增加400
+        int imgNum = 5;
+        //BigDecimal yPoint = new BigDecimal(1855).divide(ratio, 0, BigDecimal.ROUND_HALF_UP);
+        for (int i = 0; i < imgNum; i++) {
+            //BigDecimal xPoint = new BigDecimal(960 + 395 * i).divide(ratio, 0, BigDecimal.ROUND_HALF_UP);
+            imagePoints.add(new Point(960 + 403 * i, 1855));
         }
+
+        int imgWidth = 385;
+        int imgHeight = 290;
+
+        final int[] imgCount = {10};
+
+        WinUser.LowLevelKeyboardProc keyboardListener = new WinUser.LowLevelKeyboardProc() {
+            @Override
+            public WinDef.LRESULT callback(int nCode, WinDef.WPARAM wParam, WinUser.KBDLLHOOKSTRUCT info) {
+
+                log.info("thread name {}", Thread.currentThread().getName());
+                // d:68,下箭头：40
+                int vkCode = info.vkCode;
+                log.info("vkCode {}", vkCode);
+                int DInt = 40;
+                if (vkCode == DInt) {
+                    for (Point point : imagePoints) {
+                        String path = "D:/lab/img/";
+                        path = new StringBuilder().append(path).append("pic-").append(imgCount[0]).append(".png")
+                            .toString();
+                        imgCount[0]++;
+                        BufferedImage screenShot = WinScreenUtils.getScreenShot(point.x, point.y, imgWidth, imgHeight);
+                        BufferedOutputStream out = null;
+                        try {
+                            out = new BufferedOutputStream(new FileOutputStream(path));
+                            ImageIO.write(screenShot, "PNG", out);
+                            out.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return User32.INSTANCE.CallNextHookEx(null, nCode, wParam, info.getPointer());
+            }
+        };
+        KeyboardHook keyHook = new KeyboardHook(keyboardListener);
+        Thread keyHookThread = new Thread(keyHook);
+        keyHookThread.start();
+        log.info("keyHook start!");
     }
 }

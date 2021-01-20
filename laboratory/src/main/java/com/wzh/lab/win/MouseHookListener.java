@@ -29,17 +29,20 @@ public class MouseHookListener implements WinUser.LowLevelKeyboardProc {
 
     /**
      * 回调,返回这个值链中的下一个钩子程序，返回值的含义取决于钩型
-     * @param nCode nCode
-     * @param wParam wParam
-     * @param lParam lParam
-     * @return  钩子信息
+     * 
+     * @param nCode
+     *            nCode
+     * @param wParam
+     *            wParam
+     * @param lParam
+     *            lParam
+     * @return 钩子信息
      */
     @Override
     public WinDef.LRESULT callback(int nCode, WinDef.WPARAM wParam, WinUser.KBDLLHOOKSTRUCT lParam) {
         if (nCode >= 0) {
             if (wParam.intValue() == MouseHook.WM_RIGHT_BUTTON_DOWN) {
-                System.out
-                        .println("mouse move right button down, x=" + lParam.vkCode + " y=" + lParam.scanCode);
+                System.out.println("mouse right button down, x=" + lParam.vkCode + " y=" + lParam.scanCode);
             }
             // switch (wParam.intValue()) {
             // case MouseHook.WM_MOUSE_MOVE:
