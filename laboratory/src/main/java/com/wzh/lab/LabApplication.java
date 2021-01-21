@@ -11,9 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import com.sun.jna.platform.win32.User32;
-import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
 import com.wzh.lab.utils.WinScreenUtils;
 import com.wzh.lab.win.KeyboardHook;
@@ -38,11 +36,9 @@ public class LabApplication {
         BigDecimal screenResolution = new BigDecimal(Toolkit.getDefaultToolkit().getScreenResolution());
         BigDecimal ratio = screenResolution.divide(baseScreen, 2, BigDecimal.ROUND_HALF_UP);
 
-        // 起始位置x:960,y:1855，x每次增加400
+        // 起始位置x:960,y:1855，x每次增加403
         int imgNum = 5;
-        //BigDecimal yPoint = new BigDecimal(1855).divide(ratio, 0, BigDecimal.ROUND_HALF_UP);
         for (int i = 0; i < imgNum; i++) {
-            //BigDecimal xPoint = new BigDecimal(960 + 395 * i).divide(ratio, 0, BigDecimal.ROUND_HALF_UP);
             imagePoints.add(new Point(960 + 403 * i, 1855));
         }
 
@@ -51,34 +47,31 @@ public class LabApplication {
 
         final int[] imgCount = {10};
 
-        WinUser.LowLevelKeyboardProc keyboardListener = new WinUser.LowLevelKeyboardProc() {
-            @Override
-            public WinDef.LRESULT callback(int nCode, WinDef.WPARAM wParam, WinUser.KBDLLHOOKSTRUCT info) {
+        WinUser.LowLevelKeyboardProc keyboardListener = (nCode, wParam, info) -> {
 
-                log.info("thread name {}", Thread.currentThread().getName());
-                // d:68,下箭头：40
-                int vkCode = info.vkCode;
-                log.info("vkCode {}", vkCode);
-                int DInt = 40;
-                if (vkCode == DInt) {
-                    for (Point point : imagePoints) {
-                        String path = "D:/lab/img/";
-                        path = new StringBuilder().append(path).append("pic-").append(imgCount[0]).append(".png")
-                            .toString();
-                        imgCount[0]++;
-                        BufferedImage screenShot = WinScreenUtils.getScreenShot(point.x, point.y, imgWidth, imgHeight);
-                        BufferedOutputStream out = null;
-                        try {
-                            out = new BufferedOutputStream(new FileOutputStream(path));
-                            ImageIO.write(screenShot, "PNG", out);
-                            out.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+            log.info("thread name {}", Thread.currentThread().getName());
+            // d:68,下箭头：40
+            int vkCode = info.vkCode;
+            log.info("vkCode {}", vkCode);
+            int dInt = 40;
+            if (vkCode == dInt) {
+                for (Point point : imagePoints) {
+                    String path = "D:/lab/img/";
+                    path =
+                        new StringBuilder().append(path).append("pic-").append(imgCount[0]).append(".png").toString();
+                    imgCount[0]++;
+                    BufferedImage screenShot = WinScreenUtils.getScreenShot(point.x, point.y, imgWidth, imgHeight);
+                    BufferedOutputStream out = null;
+                    try {
+                        out = new BufferedOutputStream(new FileOutputStream(path));
+                        ImageIO.write(screenShot, "PNG", out);
+                        out.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-                return User32.INSTANCE.CallNextHookEx(null, nCode, wParam, info.getPointer());
             }
+            return User32.INSTANCE.CallNextHookEx(null, nCode, wParam, info.getPointer());
         };
         KeyboardHook keyHook = new KeyboardHook(keyboardListener);
         Thread keyHookThread = new Thread(keyHook);
