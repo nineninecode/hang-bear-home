@@ -55,7 +55,7 @@ public class FileReadUtils {
      */
     public static List<String> getResourceFileContent(String path) {
         List<String> strings = new ArrayList<>();
-        FileInputStream in = null;
+        FileInputStream in;
         try {
             in = new FileInputStream(CommonConstant.RESOURCE_PATH + path);
             BufferedReader utf8Reader = IoUtil.getUtf8Reader(in);
