@@ -34,6 +34,7 @@ public class PieceOcrThread extends Thread {
         while (true) {
             log.info(path);
             ocrService.doOCR(file);
+            Param.end.countDown();
         }
     }
 }

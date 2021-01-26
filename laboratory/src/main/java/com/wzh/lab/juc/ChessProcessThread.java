@@ -4,10 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
 
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
@@ -49,15 +49,14 @@ public class ChessProcessThread extends Thread {
      */
     private String resourcePath = "D:/lab/img/";
 
-
     public ChessProcessThread(List<OcrService> ocrServices) {
         super();
         this.ocrServices = ocrServices;
     }
 
-
     @Override
     public void run() {
+
         WinDef.HMODULE hMod = Kernel32.INSTANCE.GetModuleHandle(null);
         keyboardHook = (nCode, wParam, info) -> {
             log.info("screenKeyInt {}", screenKeyInt);
@@ -66,8 +65,17 @@ public class ChessProcessThread extends Thread {
             log.info("vkCode {}", vkCode);
             // 按一次键位只执行一次
             if (vkCode == screenKeyInt && wParam.intValue() == KEY_PRESS) {
-                for(OcrService ocrService:ocrServices){
+                for (OcrService ocrService : ocrServices) {
                     ocrService.signalAll();
+                }
+                try {
+                    Param.end.await();
+                    log.info("count down 完毕");
+                    Param.end = new CountDownLatch(2);
+                    log.info("重新设置 CountDownLatch");
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
             return LIB.CallNextHookEx(hhk, nCode, wParam, info.getPointer());
@@ -91,7 +99,7 @@ public class ChessProcessThread extends Thread {
     public static void main(String[] args) {
         OcrService ocrService = new OcrService();
         OcrService ocrService2 = new OcrService();
-        List<OcrService> ocrServices= new ArrayList<>();
+        List<OcrService> ocrServices = new ArrayList<>();
         ocrServices.add(ocrService);
         ocrServices.add(ocrService2);
         ChessProcessThread chessProcessThread = new ChessProcessThread(ocrServices);
@@ -102,10 +110,10 @@ public class ChessProcessThread extends Thread {
         pieceOcrThread2.setName("delaiesi");
 
         ThreadPoolExecutor threadPoolExecutor =
-                new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+            new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
         threadPoolExecutor.execute(pieceOcrThread);
         threadPoolExecutor.execute(pieceOcrThread2);
         threadPoolExecutor.execute(chessProcessThread);
-        //ocrService.signalAll();
+        // ocrService.signalAll();
     }
 }

@@ -2,6 +2,7 @@ package com.wzh.lab.demo;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 /**
  * <p>
@@ -51,6 +52,10 @@ public class Mouse {
         robot.mouseMove((int)(1550 / 1.5), (int)(1720 / 1.5));
         robot.mousePress(InputEvent.BUTTON1_MASK);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
+        robot.keyPress(KeyEvent.VK_D);
+        System.out.println(KeyEvent.VK_D);
+        robot.keyRelease(KeyEvent.VK_D);
+
         // int maskForButton = MouseEvent.getMaskForButton(InputEvent.BUTTON1_MASK);
         // System.out.println(maskForButton);
         // int numberOfButtons = MouseInfo.getNumberOfButtons();

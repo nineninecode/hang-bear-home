@@ -57,6 +57,7 @@ public class OcrDemo {
 
             String fileName = "ocr5.png";
             String filePath = "d:/" + fileName;
+             filePath = "d:/lab/img/1/4.png";
             // 指定要识别的图片文件
             String ocrText = OcrDemo.doOCRFromFile(new File(filePath), lang);
             // OCR识别结果：图像转文本
