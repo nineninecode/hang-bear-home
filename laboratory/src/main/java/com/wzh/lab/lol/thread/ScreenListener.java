@@ -1,4 +1,4 @@
-package com.wzh.lab.lol;
+package com.wzh.lab.lol.thread;
 
 import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
@@ -72,31 +73,8 @@ public class ScreenListener implements Runnable {
             log.info("vkCode {}", vkCode);
             // 按一次键位只执行一次
             if (vkCode == screenKeyInt && wParam.intValue() == KEY_PRESS) {
-                ScreenPieceData screenPieceData = new ScreenPieceData();
-                List<Point> imagePoints = screenPieceData.getImagePoints();
-                int imgWidth = screenPieceData.getImgWidth();
-                int imgHeight = screenPieceData.getImgHeight();
-
-                for (Point point : imagePoints) {
-                    long id = IdUtil.getSnowflake(1, 1).nextId();
-                    String path = resourcePath + id + ".png";
-                    BufferedImage screenShot = WinScreenUtils.getScreenShot(point.x, point.y, imgWidth, imgHeight);
-                    BufferedOutputStream out = null;
-                    try {
-                        File file = new File(resourcePath);
-                        if (!file.exists()) {
-                            boolean mkdirs = file.mkdirs();
-                            if (!mkdirs) {
-                                throw new IOException("文件夹创建失败！");
-                            }
-                        }
-                        out = new BufferedOutputStream(new FileOutputStream(path));
-                        ImageIO.write(screenShot, "PNG", out);
-                        out.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                // 棋子截图
+                screenPiece();
             }
             return LIB.CallNextHookEx(hhk, nCode, wParam, info.getPointer());
         };
@@ -114,6 +92,37 @@ public class ScreenListener implements Runnable {
             }
         }
         LIB.UnhookWindowsHookEx(hhk);
+    }
+
+    /**
+     * 棋子截图
+     */
+    private void screenPiece() {
+        ScreenPieceData screenPieceData = new ScreenPieceData();
+        List<Point> imagePoints = screenPieceData.getImagePoints();
+        int imgWidth = screenPieceData.getImgWidth();
+        int imgHeight = screenPieceData.getImgHeight();
+
+        for (Point point : imagePoints) {
+            long id = IdUtil.getSnowflake(1, 1).nextId();
+            String path = resourcePath + id + ".png";
+            BufferedImage screenShot = WinScreenUtils.getScreenShot(point.x, point.y, imgWidth, imgHeight);
+            BufferedOutputStream out = null;
+            try {
+                File file = new File(resourcePath);
+                if (!file.exists()) {
+                    boolean mkdirs = file.mkdirs();
+                    if (!mkdirs) {
+                        throw new IOException("文件夹创建失败！");
+                    }
+                }
+                out = new BufferedOutputStream(new FileOutputStream(path));
+                ImageIO.write(screenShot, "PNG", out);
+                out.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void main(String[] args) {

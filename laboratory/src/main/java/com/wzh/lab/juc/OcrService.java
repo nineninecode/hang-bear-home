@@ -5,7 +5,7 @@ import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
-import java.io.File;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -56,16 +56,17 @@ public class OcrService {
         }
     }
 
-    public void doOCR(File imageFile) {
-            await();
-            // 等待结束，执行ocr
-            String result = null;
-            try {
-                result = instance.doOCR(imageFile);
-            } catch (TesseractException e) {
-                e.printStackTrace();
-            }
-            log.info(result);
+    public String doOCR(BufferedImage imageFile) {
+        await();
+        // 等待结束，执行ocr
+        String result = null;
+        try {
+            result = instance.doOCR(imageFile);
+        } catch (TesseractException e) {
+            e.printStackTrace();
+        }
+        log.info(result);
+        return result;
     }
 
     public void signalAll() {

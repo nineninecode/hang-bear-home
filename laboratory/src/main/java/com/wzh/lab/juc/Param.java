@@ -2,6 +2,8 @@ package com.wzh.lab.juc;
 
 import java.util.concurrent.CountDownLatch;
 
+import com.wzh.lab.lol.thread.ScreenPieceData;
+
 /**
  * <p>
  * 代码描述
@@ -13,6 +15,8 @@ import java.util.concurrent.CountDownLatch;
 public class Param {
     public static String[] names = new String[5];
 
-    public static CountDownLatch end = new CountDownLatch(3);
+    public static CountDownLatch pieceCount = new CountDownLatch(5);
+
+    public static ScreenPieceData screenPieceData = new ScreenPieceData();
 
 }

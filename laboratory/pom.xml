@@ -19,7 +19,6 @@
             <version>4.5.1</version>
         </dependency>
 
-
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna</artifactId>
@@ -30,6 +29,7 @@
             <artifactId>platform</artifactId>
             <version>3.5.2</version>
         </dependency>
+
     </dependencies>
 
 </project>

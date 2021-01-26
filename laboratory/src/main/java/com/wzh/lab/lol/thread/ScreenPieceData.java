@@ -1,4 +1,4 @@
-package com.wzh.lab.lol;
+package com.wzh.lab.lol.thread;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -27,19 +27,22 @@ public class ScreenPieceData {
     /**
      * 图片宽度
      */
-    private int imgWidth = 385;
+    private int imgWidth = 280;
+    // private int imgWidth = 385;
 
     /**
      * 图片高度
      */
-    private int imgHeight = 290;
+    private int imgHeight = 50;
+    // private int imgHeight = 290;
 
     public ScreenPieceData() {
         // 起始位置x:960,y:1855，x每次增加403
         int imgNum = 5;
         for (int i = 0; i < imgNum; i++) {
-            //this.imagePoints.add(new Point(960 + 403 * i, 1855));
-            this.imagePoints.add(new Point(260 + 403 * i, 455));
+            this.imagePoints.add(new Point(965 + 403 * i, 2085));
+            // this.imagePoints.add(new Point(960 + 403 * i, 1855));
+            // this.imagePoints.add(new Point(260 + 403 * i, 455));
         }
     }
 

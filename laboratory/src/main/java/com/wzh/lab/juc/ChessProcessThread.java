@@ -9,6 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
@@ -44,11 +45,6 @@ public class ChessProcessThread extends Thread {
      */
     private int screenKeyInt = 68;
 
-    /**
-     * 截图保存文件夹
-     */
-    private String resourcePath = "D:/lab/img/";
-
     public ChessProcessThread(List<OcrService> ocrServices) {
         super();
         this.ocrServices = ocrServices;
@@ -69,9 +65,9 @@ public class ChessProcessThread extends Thread {
                     ocrService.signalAll();
                 }
                 try {
-                    Param.end.await();
+                    Param.pieceCount.await();
                     log.info("count down 完毕");
-                    Param.end = new CountDownLatch(2);
+                    Param.pieceCount = new CountDownLatch(5);
                     log.info("重新设置 CountDownLatch");
 
                 } catch (InterruptedException e) {
@@ -97,23 +93,20 @@ public class ChessProcessThread extends Thread {
     }
 
     public static void main(String[] args) {
-        OcrService ocrService = new OcrService();
-        OcrService ocrService2 = new OcrService();
-        List<OcrService> ocrServices = new ArrayList<>();
-        ocrServices.add(ocrService);
-        ocrServices.add(ocrService2);
-        ChessProcessThread chessProcessThread = new ChessProcessThread(ocrServices);
-        chessProcessThread.setName("chess process");
-        PieceOcrThread pieceOcrThread = new PieceOcrThread(ocrService, "D:/lab/img/1/1.png");
-        pieceOcrThread.setName("jax");
-        PieceOcrThread pieceOcrThread2 = new PieceOcrThread(ocrService2, "D:/lab/img/1/2.png");
-        pieceOcrThread2.setName("delaiesi");
 
         ThreadPoolExecutor threadPoolExecutor =
-            new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-        threadPoolExecutor.execute(pieceOcrThread);
-        threadPoolExecutor.execute(pieceOcrThread2);
+            new ThreadPoolExecutor(6, 6, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+
+        List<OcrService> ocrServices = new ArrayList<>();
+        int pieceNum = 5;
+        for (int i = 0; i < pieceNum; i++) {
+            OcrService ocrService = new OcrService();
+            ocrServices.add(ocrService);
+            PieceOcrThread pieceOcrThread = new PieceOcrThread(ocrService, i);
+            threadPoolExecutor.execute(pieceOcrThread);
+        }
+
+        ChessProcessThread chessProcessThread = new ChessProcessThread(ocrServices);
         threadPoolExecutor.execute(chessProcessThread);
-        // ocrService.signalAll();
     }
 }

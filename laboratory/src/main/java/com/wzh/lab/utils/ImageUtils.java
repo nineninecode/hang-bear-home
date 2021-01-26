@@ -3,13 +3,21 @@ package com.wzh.lab.utils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+import com.wzh.lab.enums.PieceEnum;
 
 /**
  * <p>
- * 代码描述
+ * 图片处理工具类
  * </p>
  *
  * @author weizhuohang
@@ -139,6 +147,42 @@ public class ImageUtils {
         return imageSign;
     }
 
+    /**
+     * 计算两个字符串的汉明距离
+     * 
+     * @param imageCode
+     *            字符串1
+     * @param imageSign
+     *            字符串2
+     * @return 距离
+     */
+    public static int getHangMing(String imageCode, String imageSign) {
+
+        int bitCount = new BigInteger(imageCode, 2).xor(new BigInteger(imageSign, 2)).bitCount();
+
+        return bitCount;
+    }
+
+    /**
+     * 判断是否为同一图片
+     * 
+     * @param imageCode
+     *            字符串1
+     * @param imageSign
+     *            字符串2
+     * @param distance
+     *            最大距离
+     * @return 结果
+     */
+    public static boolean isSameImage(String imageCode, String imageSign, int distance) {
+        boolean result = true;
+        int hangMing = getHangMing(imageCode, imageSign);
+        if (hangMing > distance) {
+            result = false;
+        }
+        return result;
+    }
+
     // public static Bitmap convertGreyImg(Bitmap img) {
     // int width = img.getWidth(); // 获取位图的宽
     // int height = img.getHeight(); // 获取位图的高
@@ -165,18 +209,47 @@ public class ImageUtils {
     // }
 
     public static void main(String[] args) throws IOException {
-        String path1 = "D:/img/1-pic.png";
-        String path2 = "D:/img/3-pic.png";
-        String path3 = "D:/img/Nidalee.png";
-        String imageSign1 = getImageSign(path1);
+        String resourcePath = "D:/lab/img/";
 
-        String imageSign2 = getImageSign(path2);
+        Map<String, List<Boolean>> resultMap = new HashMap<>(128);
+        Map<String, List<Integer>> bitMap = new HashMap<>(128);
+        int distance = 5;
 
-        int bitCount = new BigInteger(imageSign1, 2).xor(new BigInteger(imageSign2, 2)).bitCount();
+        int falseNum = 0;
+        int sumNum = 0;
 
-        System.out.println(bitCount);
-        System.out.println(imageSign1);
-        System.out.println(imageSign2);
+        PieceEnum[] values = PieceEnum.values();
+        for (PieceEnum pieceEnum : values) {
+            List<Boolean> resultList = new ArrayList<>();
+            List<Integer> bitCountList = new ArrayList<>();
+            String path = resourcePath + pieceEnum.getCode();
+            List<File> files = FileReadUtils.getFiles(path);
+            int num = 0;
+            String baseSign = "";
+            for (File file : files) {
+                String imageSign = getImageSign(ImageIO.read(file));
+                if (num == 0) {
+                    baseSign = imageSign;
+                }
+
+                boolean sameImage = true;
+                int hangMing = getHangMing(baseSign, imageSign);
+                if (hangMing > distance) {
+                    sameImage = false;
+                    falseNum++;
+                }
+                bitCountList.add(hangMing);
+                resultList.add(sameImage);
+                num++;
+                sumNum++;
+            }
+            resultMap.put(pieceEnum.getName(), resultList);
+            bitMap.put(pieceEnum.getName(), bitCountList);
+        }
+        System.out.println(resultMap);
+        System.out.println(bitMap);
+        System.out.println(falseNum);
+        System.out.println(sumNum);
 
     }
 }
