@@ -36,3 +36,4 @@ build/
 .mvn
 mvnw
 mvnw.cmd
+/laboratory/src/main/resources/tessdata/
