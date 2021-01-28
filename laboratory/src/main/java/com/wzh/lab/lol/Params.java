@@ -16,6 +16,7 @@ import java.util.concurrent.CountDownLatch;
 public class Params {
 
     public static CountDownLatch pieceCount = new CountDownLatch(5);
+    public static Boolean isContinue = Boolean.TRUE;
 
     /**
      * 图标坐标
@@ -24,23 +25,23 @@ public class Params {
     /**
      * 启动坐标
      */
-    public static Point startIcon = new Point(1735, 1707);
+    public static Point startIcon = new Point(1750, 1700);
     /**
      * 接受坐标坐标
      */
-    public static Point acceptIcon = new Point(1735, 1600);
+    public static Point acceptIcon = new Point(1920, 1480);
     /**
      * 接受矩形
      */
-    public static Rectangle acceptRectangle = new Rectangle(1735, 1600, 200, 200);
+    public static Rectangle acceptRectangle = new Rectangle(1850, 1460, 120, 60);
     /**
      * 环节矩形
      */
-    public static Rectangle stageRectangle = new Rectangle(1735, 1600, 200, 200);
+    public static Rectangle stageRectangle = new Rectangle(1780, 300, 290, 90);
     /**
      * 金币矩形
      */
-    public static Rectangle moneyRectangle = new Rectangle(1735, 1600, 200, 200);
+    public static Rectangle moneyRectangle = new Rectangle(1740, 1760, 80, 50);
     /**
      * 棋子矩形列表
      */
@@ -74,8 +75,8 @@ public class Params {
 
         int personNum = 8;
         for (int i = 0; i < personNum; i++) {
-            int y = 965 + 403 * i;
-            Rectangle rectangle = new Rectangle(2085, y, 280, 50);
+            int y = 422 + 143 * i;
+            Rectangle rectangle = new Rectangle(3568, y, 90, 64);
             pieceRectangles.add(rectangle);
         }
     }

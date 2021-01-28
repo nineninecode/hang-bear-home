@@ -2,10 +2,14 @@ package com.wzh.lab.lol;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
-import com.wzh.lab.utils.ImageUtils;
+import com.wzh.lab.lol.task.AcceptCallable;
+import com.wzh.lab.utils.WinRobotUtils;
 
 /**
  * <p>
@@ -17,11 +21,24 @@ import com.wzh.lab.utils.ImageUtils;
  */
 @Slf4j
 public class StartChess {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
-        Rectangle stageRectangle = new Rectangle(500, 600, 200, 200);
-        String content = ImageUtils.getContent(stageRectangle);
-        log.info(content);
+        WinRobotUtils.leftMouseSinglePress(Params.lolIcon);
+        while (Params.isContinue) {
+            ThreadPoolExecutor executors =
+                new ThreadPoolExecutor(6, 6, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+            AcceptCallable acceptTask = new AcceptCallable();
+            Future<Boolean> submit = executors.submit(acceptTask);
+            int activeCount = executors.getActiveCount();
+            log.info("activeCount {}", activeCount);
+            // acceptTask不执行完毕会阻塞
+            submit.get();
+            log.info("接受 {}", activeCount);
+            activeCount = executors.getActiveCount();
+            log.info("activeCount {}", activeCount);
+
+        }
+
         // 1.点击开始
         // 2.启动所有监控线程
         // 3.游戏开始

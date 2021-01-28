@@ -44,7 +44,7 @@ public class PieceOcrThread extends Thread {
 
             BufferedImage screenShot = WinScreenUtils.getScreenShot(point.x, point.y, screenPieceData.getImgWidth(),
                 screenPieceData.getImgHeight());
-            String s = ocrService.doOCR(screenShot);
+            String s = ocrService.doOcr(screenShot);
             Param.names[index] = s;
             Param.pieceCount.countDown();
         }
