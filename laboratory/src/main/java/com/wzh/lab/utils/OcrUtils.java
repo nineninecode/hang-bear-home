@@ -4,10 +4,10 @@ import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.TesseractException;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import com.wzh.lab.lol.enums.PieceEnum;
 
@@ -44,6 +44,16 @@ public class OcrUtils {
         return result;
     }
 
+    public static String doOCR(BufferedImage imageFile) {
+        String result = null;
+        try {
+            result = instance.doOCR(imageFile);
+        } catch (TesseractException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public static void main(String[] args) {
 
         PieceEnum yasuo = PieceEnum.KATLINNA;
@@ -63,7 +73,7 @@ public class OcrUtils {
         }
         System.out.println(num);
         System.out.println(fileStrs);
-        System.out.println(System.currentTimeMillis()-l);
+        System.out.println(System.currentTimeMillis() - l);
     }
 
 }

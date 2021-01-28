@@ -1,5 +1,12 @@
 package com.wzh.lab.lol;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.awt.*;
+
+
+import com.wzh.lab.utils.ImageUtils;
+
 /**
  * <p>
  * 代码描述
@@ -8,8 +15,13 @@ package com.wzh.lab.lol;
  * @author weizhuohang
  * @since 2021/1/24 10:42
  */
+@Slf4j
 public class StartChess {
     public static void main(String[] args) {
+
+        Rectangle stageRectangle = new Rectangle(500, 600, 200, 200);
+        String content = ImageUtils.getContent(stageRectangle);
+        log.info(content);
         // 1.点击开始
         // 2.启动所有监控线程
         // 3.游戏开始

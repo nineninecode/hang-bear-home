@@ -1,6 +1,7 @@
 package com.wzh.lab.utils;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -11,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import com.wzh.lab.lol.enums.PieceEnum;
 
@@ -183,6 +183,24 @@ public class ImageUtils {
         return result;
     }
 
+    /**
+     * ocr获取屏幕矩形中的内容
+     * 
+     * @param rectangle
+     *            识别矩形
+     * @return 内容
+     */
+    public static String getContent(Rectangle rectangle) {
+        String result = null;
+        try {
+            Robot robot = new Robot();
+            BufferedImage bfImage = robot.createScreenCapture(rectangle);
+            result = OcrUtils.doOCR(bfImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
     // public static Bitmap convertGreyImg(Bitmap img) {
     // int width = img.getWidth(); // 获取位图的宽
     // int height = img.getHeight(); // 获取位图的高
