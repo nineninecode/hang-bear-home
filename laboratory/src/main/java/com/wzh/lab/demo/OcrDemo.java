@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.List;
 
 
-import com.wzh.lab.enums.PieceEnum;
+import com.wzh.lab.lol.enums.PieceEnum;
 import com.wzh.lab.utils.FileReadUtils;
 
 /**

@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         // 访问该接口时请求头依然带上了authorization token，则spring security还是会去校验
-        String[] AUTH_WHITELIST = customIgnoreUrlProperties.getUrlArray();
+        String[] withoutAuthUrls = customIgnoreUrlProperties.getUrlArray();
 
         http.cors().and().csrf().disable()
             // 不需要session
@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // 访问资源开启身份验证
             .and().authorizeRequests()
             // 放行的资源。可以匿名访问
-            .antMatchers(AUTH_WHITELIST).permitAll()
+            .antMatchers(withoutAuthUrls).permitAll()
             // 所有请求需要身份认证
             .anyRequest().authenticated().and()
             // 添加自定义filter
@@ -74,12 +74,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and().addFilterBefore(myFilterSecurityInterceptor, FilterSecurityInterceptor.class);
     }
 
-    /**
-     * 自定义登录验证，该方法是登录的时候会进入
-     *
-     * @param auth
-     * @throws Exception
-     */
+    /// **
+    // * 自定义登录验证，该方法是登录的时候会进入
+    // *
+    // * @param auth
+    // * @throws Exception
+    // */
     // Spring Security在Spring加载完Bean之前就加载了，可能会出现userDetailService中出现诸如为null的情况
     // @Override
     // public void configure(AuthenticationManagerBuilder auth) throws Exception {

@@ -2,7 +2,7 @@ package com.wzh.lab.juc;
 
 import java.util.concurrent.CountDownLatch;
 
-import com.wzh.lab.lol.thread.ScreenPieceData;
+import com.wzh.lab.juc.thread.ScreenPieceData;
 
 /**
  * <p>

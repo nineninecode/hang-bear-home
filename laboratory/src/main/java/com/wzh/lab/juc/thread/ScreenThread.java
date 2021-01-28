@@ -1,4 +1,4 @@
-package com.wzh.lab.lol.thread;
+package com.wzh.lab.juc.thread;
 
 import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;

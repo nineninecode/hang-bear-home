@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import com.wzh.lab.enums.PieceEnum;
+import com.wzh.lab.lol.enums.PieceEnum;
 
 /**
  * <p>

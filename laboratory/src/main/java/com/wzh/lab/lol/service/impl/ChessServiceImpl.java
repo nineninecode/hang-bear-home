@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-import com.wzh.lab.lol.thread.ScreenPieceData;
+import com.wzh.lab.juc.thread.ScreenPieceData;
 import com.wzh.lab.lol.service.ChessService;
 import com.wzh.lab.utils.WinScreenUtils;
 

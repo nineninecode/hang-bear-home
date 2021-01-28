@@ -1,4 +1,4 @@
-package com.wzh.lab.enums;
+package com.wzh.lab.lol.enums;
 
 /**
  * <p>

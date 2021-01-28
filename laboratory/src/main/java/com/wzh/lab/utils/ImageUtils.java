@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 
-import com.wzh.lab.enums.PieceEnum;
+import com.wzh.lab.lol.enums.PieceEnum;
 
 /**
  * <p>
