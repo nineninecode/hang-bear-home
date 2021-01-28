@@ -8,6 +8,7 @@ import java.util.List;
 
 
 import com.wzh.lab.juc.thread.ScreenPieceData;
+import com.wzh.lab.lol.service.OcrService;
 import com.wzh.lab.utils.WinScreenUtils;
 
 /**

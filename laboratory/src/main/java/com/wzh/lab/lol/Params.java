@@ -17,16 +17,49 @@ public class Params {
 
     public static CountDownLatch pieceCount = new CountDownLatch(5);
 
+    /**
+     * 图标坐标
+     */
     public static Point lolIcon = new Point(780, 30);
+    /**
+     * 启动坐标
+     */
     public static Point startIcon = new Point(1735, 1707);
+    /**
+     * 接受坐标坐标
+     */
     public static Point acceptIcon = new Point(1735, 1600);
+    /**
+     * 接受矩形
+     */
     public static Rectangle acceptRectangle = new Rectangle(1735, 1600, 200, 200);
+    /**
+     * 环节矩形
+     */
     public static Rectangle stageRectangle = new Rectangle(1735, 1600, 200, 200);
+    /**
+     * 金币矩形
+     */
     public static Rectangle moneyRectangle = new Rectangle(1735, 1600, 200, 200);
+    /**
+     * 棋子矩形列表
+     */
     public static List<Rectangle> pieceRectangles = new ArrayList<>();
+    /**
+     * 血量矩形列表
+     */
     public static List<Rectangle> bloodRectangles = new ArrayList<>();
+    /**
+     * 金币
+     */
     public static int money = 0;
+    /**
+     * 等级
+     */
     public static int level = 0;
+    /**
+     * 血量
+     */
     public static int blood = 0;
 
     static {

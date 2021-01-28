@@ -1,4 +1,4 @@
-package com.wzh.lab.juc;
+package com.wzh.lab.lol.service;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.tess4j.ITesseract;
