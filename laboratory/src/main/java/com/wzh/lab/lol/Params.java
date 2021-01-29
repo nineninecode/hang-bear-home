@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import com.wzh.lab.lol.task.PieceTask;
+
 /**
  * <p>
  * 代码描述
@@ -16,7 +18,14 @@ import java.util.concurrent.CountDownLatch;
 public class Params {
 
     public static CountDownLatch pieceCount = new CountDownLatch(5);
+    /**
+     * 是否继续
+     */
     public static Boolean isContinue = Boolean.TRUE;
+    /**
+     * 当前对局是否结束
+     */
+    public static Boolean isEnd = Boolean.FALSE;
 
     /**
      * 图标坐标
@@ -62,6 +71,14 @@ public class Params {
      * 血量
      */
     public static int blood = 0;
+    /**
+     * 刷新棋子列表
+     */
+    public static List<String> freshPieces = new ArrayList<>();
+    /**
+     * h获取棋子任务列表
+     */
+    public static List<PieceTask> pieceTasks = new ArrayList<>();
 
     static {
         // 起始位置x:960,y:1855，x每次增加403
@@ -71,6 +88,7 @@ public class Params {
             int x = 965 + 403 * i;
             Rectangle rectangle = new Rectangle(x, 2085, 280, 50);
             pieceRectangles.add(rectangle);
+            pieceTasks.add(new PieceTask(rectangle, i));
         }
 
         int personNum = 8;

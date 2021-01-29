@@ -7,8 +7,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-
 import com.wzh.lab.lol.task.AcceptCallable;
+import com.wzh.lab.utils.ImageUtils;
 import com.wzh.lab.utils.WinRobotUtils;
 
 /**
@@ -24,21 +24,32 @@ public class StartChess {
     public static void main(String[] args) throws Exception {
 
         WinRobotUtils.leftMouseSinglePress(Params.lolIcon);
+        ThreadPoolExecutor executors =
+            new ThreadPoolExecutor(8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+
         while (Params.isContinue) {
-            ThreadPoolExecutor executors =
-                new ThreadPoolExecutor(6, 6, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
             AcceptCallable acceptTask = new AcceptCallable();
             Future<Boolean> submit = executors.submit(acceptTask);
-            int activeCount = executors.getActiveCount();
-            log.info("activeCount {}", activeCount);
             // acceptTask不执行完毕会阻塞
             submit.get();
-            log.info("接受 {}", activeCount);
-            activeCount = executors.getActiveCount();
-            log.info("activeCount {}", activeCount);
 
+            while (true) {
+                String content = ImageUtils.getContent(Params.stageRectangle);
+                log.info(content);
+                boolean isPrepare = content.contains("备战环节");
+                long end;
+                if (isPrepare) {
+                    end = System.currentTimeMillis() + 60 * 1000;
+                    // 识别棋子
+                    // 阻塞等待，全部执行完毕返回，若超过两秒也返回
+                    executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
+                    Thread.sleep(end - System.currentTimeMillis());
+                }
+            }
+
+            // Params.isContinue = Boolean.FALSE;
         }
-
+        executors.shutdown();
         // 1.点击开始
         // 2.启动所有监控线程
         // 3.游戏开始

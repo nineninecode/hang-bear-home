@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Callable;
 
-
 import com.wzh.lab.lol.Params;
 import com.wzh.lab.utils.ImageUtils;
 import com.wzh.lab.utils.WinRobotUtils;
@@ -22,7 +21,7 @@ public class AcceptCallable implements Callable<Boolean> {
 
     @Override
     public Boolean call() throws Exception {
-        Boolean accept = false;
+        boolean accept = false;
 
         // 点击开始
         WinRobotUtils.leftMouseSinglePress(Params.startIcon);
@@ -41,6 +40,6 @@ public class AcceptCallable implements Callable<Boolean> {
                 e.printStackTrace();
             }
         }
-        return accept;
+        return true;
     }
 }
