@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-
 import com.wzh.lab.lol.task.AcceptCallable;
 import com.wzh.lab.utils.WinRobotUtils;
 
@@ -41,7 +40,7 @@ public class StartChess {
                     Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
                     Thread.sleep(end - System.currentTimeMillis());
                 } else if (Params.isEnd) {
-
+                    break;
                 } else {
                     Thread.sleep(2000);
                 }
