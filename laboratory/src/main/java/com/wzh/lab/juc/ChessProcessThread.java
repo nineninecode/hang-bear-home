@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -65,15 +64,15 @@ public class ChessProcessThread extends Thread {
                 for (OcrService ocrService : ocrServices) {
                     ocrService.signalAll();
                 }
-                try {
-                    Param.pieceCount.await();
-                    log.info("count down 完毕");
-                    Param.pieceCount = new CountDownLatch(5);
-                    log.info("重新设置 CountDownLatch");
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                //try {
+                //    //Param.pieceCount.await();
+                //    //log.info("count down 完毕");
+                //    //Param.pieceCount = new CountDownLatch(5);
+                //    //log.info("重新设置 CountDownLatch");
+                //
+                //} catch (InterruptedException e) {
+                //    e.printStackTrace();
+                //}
             }
             return LIB.CallNextHookEx(hhk, nCode, wParam, info.getPointer());
         };

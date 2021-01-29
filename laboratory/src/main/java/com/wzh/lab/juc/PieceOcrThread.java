@@ -2,14 +2,8 @@ package com.wzh.lab.juc;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 
-
-import com.wzh.lab.juc.thread.ScreenPieceData;
 import com.wzh.lab.lol.service.OcrService;
-import com.wzh.lab.utils.WinScreenUtils;
 
 /**
  * <p>
@@ -38,15 +32,15 @@ public class PieceOcrThread extends Thread {
     @Override
     public void run() {
         while (true) {
-            ScreenPieceData screenPieceData = Param.screenPieceData;
-            List<Point> imagePoints = screenPieceData.getImagePoints();
-            Point point = imagePoints.get(index);
-
-            BufferedImage screenShot = WinScreenUtils.getScreenShot(point.x, point.y, screenPieceData.getImgWidth(),
-                screenPieceData.getImgHeight());
-            String s = ocrService.doOcr(screenShot);
-            Param.names[index] = s;
-            Param.pieceCount.countDown();
+            //ScreenPieceData screenPieceData = Param.screenPieceData;
+            //List<Point> imagePoints = screenPieceData.getImagePoints();
+            //Point point = imagePoints.get(index);
+            //
+            //BufferedImage screenShot = WinScreenUtils.getScreenShot(point.x, point.y, screenPieceData.getImgWidth(),
+            //    screenPieceData.getImgHeight());
+            //String s = ocrService.doOcr(screenShot);
+            //Param.names[index] = s;
+            //Param.pieceCount.countDown();
         }
     }
 }

@@ -3,12 +3,10 @@ package com.wzh.lab.lol;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+
 import com.wzh.lab.lol.task.AcceptCallable;
-import com.wzh.lab.utils.ImageUtils;
 import com.wzh.lab.utils.WinRobotUtils;
 
 /**
@@ -24,32 +22,35 @@ public class StartChess {
     public static void main(String[] args) throws Exception {
 
         WinRobotUtils.leftMouseSinglePress(Params.lolIcon);
-        ThreadPoolExecutor executors =
-            new ThreadPoolExecutor(8, 8, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 
         while (Params.isContinue) {
             AcceptCallable acceptTask = new AcceptCallable();
-            Future<Boolean> submit = executors.submit(acceptTask);
+            Future<Boolean> submit = Params.executors.submit(acceptTask);
             // acceptTask不执行完毕会阻塞
             submit.get();
-
+            // 进入对局
             while (true) {
-                String content = ImageUtils.getContent(Params.stageRectangle);
-                log.info(content);
-                boolean isPrepare = content.contains("备战环节");
+                Params.executors.invokeAll(Params.stageAndEndTasks, 2, TimeUnit.SECONDS);
                 long end;
-                if (isPrepare) {
+                if (Params.isPrepare) {
                     end = System.currentTimeMillis() + 60 * 1000;
+                    // 识别血量，金币
+                    Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
                     // 识别棋子
                     // 阻塞等待，全部执行完毕返回，若超过两秒也返回
-                    executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
+                    Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
                     Thread.sleep(end - System.currentTimeMillis());
+                } else if (Params.isEnd) {
+
+                } else {
+                    Thread.sleep(2000);
                 }
+                logInfo();
             }
 
             // Params.isContinue = Boolean.FALSE;
         }
-        executors.shutdown();
+        Params.executors.shutdown();
         // 1.点击开始
         // 2.启动所有监控线程
         // 3.游戏开始
@@ -61,5 +62,11 @@ public class StartChess {
         // 3.2.4准备阶段结束，可休眠60秒中剩余时间
         // 4.结束进程，过10分钟后每一分钟判断一次是否结束，结束点击退出，重新开始
 
+    }
+
+    private static void logInfo() {
+        log.info("等级 {}，血量 {}，金币 {}", Params.level, Params.blood, Params.money);
+        log.info("棋子 {}", Params.freshPieces);
+        log.info("血量 {}", Params.freshBloods);
     }
 }

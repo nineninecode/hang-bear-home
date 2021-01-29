@@ -3,9 +3,10 @@ package com.wzh.lab.lol;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.*;
 
-import com.wzh.lab.lol.task.PieceTask;
+
+import com.wzh.lab.lol.task.*;
 
 /**
  * <p>
@@ -18,14 +19,50 @@ import com.wzh.lab.lol.task.PieceTask;
 public class Params {
 
     public static CountDownLatch pieceCount = new CountDownLatch(5);
+
+    public static ThreadPoolExecutor executors =
+        new ThreadPoolExecutor(10, 10, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+
     /**
      * 是否继续
      */
     public static Boolean isContinue = Boolean.TRUE;
+
     /**
-     * 当前对局是否结束
+     * 当前对局
      */
+    public static String endStr = "备战环节";
+    public static String endFlag = "备战环节";
     public static Boolean isEnd = Boolean.FALSE;
+
+    /**
+     * 阶段
+     */
+    public static String stage = "";
+    public static String prepareStage = "备战环节";
+    public static Boolean isPrepare = Boolean.FALSE;
+
+    /**
+     * 金币
+     */
+    public static int money = 0;
+    /**
+     * 等级
+     */
+    public static int level = 0;
+    /**
+     * 血量
+     */
+    public static int blood = 0;
+
+    /**
+     * 刷新棋子列表
+     */
+    public static List<String> freshPieces = new ArrayList<>();
+    /**
+     * 刷新血量列表
+     */
+    public static List<String> freshBloods = new ArrayList<>();
 
     /**
      * 图标坐标
@@ -52,6 +89,10 @@ public class Params {
      */
     public static Rectangle moneyRectangle = new Rectangle(1740, 1760, 80, 50);
     /**
+     * 结束矩形
+     */
+    public static Rectangle endRectangle = new Rectangle(1740, 1760, 80, 50);
+    /**
      * 棋子矩形列表
      */
     public static List<Rectangle> pieceRectangles = new ArrayList<>();
@@ -60,26 +101,21 @@ public class Params {
      */
     public static List<Rectangle> bloodRectangles = new ArrayList<>();
     /**
-     * 金币
-     */
-    public static int money = 0;
-    /**
-     * 等级
-     */
-    public static int level = 0;
-    /**
-     * 血量
-     */
-    public static int blood = 0;
-    /**
-     * 刷新棋子列表
-     */
-    public static List<String> freshPieces = new ArrayList<>();
-    /**
-     * h获取棋子任务列表
+     * 获取棋子任务列表
      */
     public static List<PieceTask> pieceTasks = new ArrayList<>();
+    /**
+     * 获取血量和金币任务列表
+     */
+    public static List<RectangleTask> bloodAndMoneyTasks = new ArrayList<>();
+    /**
+     * 获取阶段和结束任务列表
+     */
+    public static List<RectangleTask> stageAndEndTasks = new ArrayList<>();
 
+    /**
+     * 初始化数据
+     */
     static {
         // 起始位置x:960,y:1855，x每次增加403
         int imgNum = 5;
@@ -96,6 +132,11 @@ public class Params {
             int y = 422 + 143 * i;
             Rectangle rectangle = new Rectangle(3568, y, 90, 64);
             pieceRectangles.add(rectangle);
+            bloodAndMoneyTasks.add(new BloodTask(rectangle, i));
         }
+        bloodAndMoneyTasks.add(new MoneyTask(moneyRectangle));
+
+        stageAndEndTasks.add(new StageTask(stageRectangle));
+        stageAndEndTasks.add(new EndTask(endRectangle));
     }
 }
