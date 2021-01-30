@@ -2,11 +2,9 @@ package com.wzh.lab.lol;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 
-import com.wzh.lab.lol.task.AcceptCallable;
 import com.wzh.lab.utils.WinRobotUtils;
 
 /**
@@ -18,17 +16,13 @@ import com.wzh.lab.utils.WinRobotUtils;
  * @since 2021/1/24 10:42
  */
 @Slf4j
-public class StartChess {
+public class StartChess4 {
     public static void main(String[] args) {
 
-        WinRobotUtils.leftMouseSinglePress(Params.lolIcon);
 
         try {
             while (Params.isContinue) {
-                AcceptCallable acceptTask = new AcceptCallable();
-                Future<Boolean> submit = Params.executors.submit(acceptTask);
-                // acceptTask不执行完毕会阻塞
-                submit.get();
+
                 // 进入对局
                 while (true) {
                     long end;
@@ -50,11 +44,8 @@ public class StartChess {
                         log.info("睡眠:{}毫秒", end - System.currentTimeMillis());
                         Thread.sleep(end - System.currentTimeMillis());
                     } else if (Params.isEnd) {
-                        // 点击退出
+                        //点击退出
                         WinRobotUtils.leftMouseSinglePress(Params.quitIcon);
-                        Thread.sleep(5000);
-                        // 点击再玩一次
-                        WinRobotUtils.leftMouseSinglePress(Params.lolIcon);
                         Thread.sleep(2000);
                         break;
                     } else {
@@ -68,6 +59,7 @@ public class StartChess {
                 Thread.sleep(1000);
                 // Params.isContinue = Boolean.FALSE;
             }
+            Params.executors.shutdown();
         } catch (Exception e) {
             log.error("错误:{}", e.getMessage(), e);
         }

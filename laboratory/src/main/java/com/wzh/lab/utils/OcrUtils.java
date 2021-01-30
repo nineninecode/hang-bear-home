@@ -65,6 +65,7 @@ public class OcrUtils {
         long l = System.currentTimeMillis();
         for (File file : files) {
             String result = doOCR(file);
+            result = StringUtils.replaceBlank(result);
             fileStrs.add(result);
             boolean contains = result.contains(yasuo.getName());
             if (contains) {

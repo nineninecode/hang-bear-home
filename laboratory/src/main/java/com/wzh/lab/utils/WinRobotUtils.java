@@ -42,6 +42,20 @@ public class WinRobotUtils {
         robot.mouseMove(-1, -1);
         robot.mouseMove(x, y);
         robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.delay(200);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
+    }
+
+    /**
+     * 按下某个键
+     * 
+     * @param keyInt
+     *            键位int
+     */
+    public static void pressKey(int keyInt) {
+
+        robot.keyPress(keyInt);
+        robot.delay(200);
+        robot.keyRelease(keyInt);
     }
 }

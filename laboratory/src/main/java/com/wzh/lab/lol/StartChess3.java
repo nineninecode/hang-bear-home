@@ -2,11 +2,9 @@ package com.wzh.lab.lol;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 
-import com.wzh.lab.lol.task.AcceptCallable;
 import com.wzh.lab.utils.WinRobotUtils;
 
 /**
@@ -18,17 +16,11 @@ import com.wzh.lab.utils.WinRobotUtils;
  * @since 2021/1/24 10:42
  */
 @Slf4j
-public class StartChess {
+public class StartChess3 {
     public static void main(String[] args) {
-
-        WinRobotUtils.leftMouseSinglePress(Params.lolIcon);
 
         try {
             while (Params.isContinue) {
-                AcceptCallable acceptTask = new AcceptCallable();
-                Future<Boolean> submit = Params.executors.submit(acceptTask);
-                // acceptTask不执行完毕会阻塞
-                submit.get();
                 // 进入对局
                 while (true) {
                     long end;
@@ -38,23 +30,12 @@ public class StartChess {
                     if (Params.isPrepare) {
                         log.info("进入准备阶段");
                         end = System.currentTimeMillis() + 60 * 1000;
-                        log.info("bloodAndMoneyTasks {}", Params.bloodAndMoneyTasks.size());
-                        log.info("pieceTasks {}", Params.pieceTasks.size());
-                        // 识别血量，金币
-                        Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
-                        // 识别棋子
-                        // 阻塞等待，全部执行完毕返回，若超过两秒也返回
-                        Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
-                        log.info("血量、棋子识别耗时:{}毫秒", System.currentTimeMillis() + 60 * 1000 - end);
-                        Params.lolService.playChess();
+                        WinRobotUtils.leftMouseSinglePress(Params.piecePoints.get(1));
                         log.info("睡眠:{}毫秒", end - System.currentTimeMillis());
                         Thread.sleep(end - System.currentTimeMillis());
                     } else if (Params.isEnd) {
                         // 点击退出
                         WinRobotUtils.leftMouseSinglePress(Params.quitIcon);
-                        Thread.sleep(5000);
-                        // 点击再玩一次
-                        WinRobotUtils.leftMouseSinglePress(Params.lolIcon);
                         Thread.sleep(2000);
                         break;
                     } else {
@@ -68,6 +49,7 @@ public class StartChess {
                 Thread.sleep(1000);
                 // Params.isContinue = Boolean.FALSE;
             }
+            Params.executors.shutdown();
         } catch (Exception e) {
             log.error("错误:{}", e.getMessage(), e);
         }

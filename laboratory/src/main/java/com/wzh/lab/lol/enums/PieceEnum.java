@@ -24,7 +24,7 @@ public enum PieceEnum {
     GAILUN("盖伦","1/9"),
     FEIAOAN("菲奥娜","1/10"),
     DAIANNA("黛安娜","1/11"),
-    YASUO("亚索","1/12"),
+    YASUO("亚素","1/12"),
     TAMU("塔姆","1/13"),
 
     /**

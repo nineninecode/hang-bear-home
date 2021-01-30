@@ -8,9 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>
@@ -28,28 +25,36 @@ public class StartChess2 {
 
             // 进入对局
             while (true) {
-                long end;
-                // end = System.currentTimeMillis() + 60 * 1000;
-                // 识别血量，金币
-                end = System.currentTimeMillis();
-                Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
-                Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
-                log.info("耗时 {}", System.currentTimeMillis() - end);
+                // long end;
+                //// end = System.currentTimeMillis() + 60 * 1000;
+                //// 识别血量，金币
+                // end = System.currentTimeMillis();
+                // Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
+                // Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
+                // log.info("耗时 {}", System.currentTimeMillis() - end);
+                // Robot robot = new Robot();
+                // List<BufferedImage> images = new ArrayList<>();
+                // for (Rectangle rectangle : Params.bloodRectangles) {
+                // images.add(robot.createScreenCapture(rectangle));
+                // BufferedImage capture = robot.createScreenCapture(rectangle);
+                // String path = "D:/lab/lol/" + IdUtil.getSnowflake(1, 1).nextIdStr() + ".png";
+                // BufferedOutputStream out = null;
+                // out = new BufferedOutputStream(new FileOutputStream(path));
+                // ImageIO.write(capture, "PNG", out);
+                // out.close();
+                // }
+                //
+                // log.info("等级 {}，血量 {}，金币 {}", Params.level, Params.blood, Params.money);
+                // log.info("血量 {}", Params.freshBloods);
+                // log.info("棋子 {}", Params.freshPieces);
                 Robot robot = new Robot();
-                List<BufferedImage> images = new ArrayList<>();
-                for (Rectangle rectangle : Params.bloodRectangles) {
-                    images.add(robot.createScreenCapture(rectangle));
-                    BufferedImage capture = robot.createScreenCapture(rectangle);
-                    String path = "D:/lab/lol/" + IdUtil.getSnowflake(1, 1).nextIdStr() + ".png";
-                    BufferedOutputStream out = null;
-                    out = new BufferedOutputStream(new FileOutputStream(path));
-                    ImageIO.write(capture, "PNG", out);
-                    out.close();
-                }
+                BufferedImage capture = robot.createScreenCapture(Params.moneyRectangle);
+                String path = "D:/lab/lol/" + IdUtil.getSnowflake(1, 1).nextIdStr() + ".png";
+                BufferedOutputStream out = null;
+                out = new BufferedOutputStream(new FileOutputStream(path));
+                ImageIO.write(capture, "PNG", out);
+                out.close();
 
-                log.info("等级 {}，血量 {}，金币 {}", Params.level, Params.blood, Params.money);
-                log.info("血量 {}", Params.freshBloods);
-                log.info("棋子 {}", Params.freshPieces);
                 Thread.sleep(3000);
                 // 识别棋子
                 // 阻塞等待，全部执行完毕返回，若超过两秒也返回

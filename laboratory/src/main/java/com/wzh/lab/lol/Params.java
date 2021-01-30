@@ -8,6 +8,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+
+import com.wzh.lab.lol.service.LOLService;
 import com.wzh.lab.lol.task.*;
 
 /**
@@ -33,8 +35,8 @@ public class Params {
     /**
      * 当前对局
      */
-    public static String endStr = "备战环节";
-    public static String endFlag = "备战环节";
+    public static String endStr = "";
+    public static String endFlag = "现在退出";
     public static Boolean isEnd = Boolean.FALSE;
 
     /**
@@ -43,6 +45,7 @@ public class Params {
     public static String stage = "";
     public static String prepareStage = "备战环节";
     public static Boolean isPrepare = Boolean.FALSE;
+    public static int stageNUm = 1;
 
     /**
      * 金币
@@ -55,7 +58,7 @@ public class Params {
     /**
      * 血量
      */
-    public static int blood = 0;
+    public static int blood = 100;
 
     /**
      * 刷新棋子列表
@@ -75,9 +78,13 @@ public class Params {
      */
     public static Point startIcon = new Point(1750, 1700);
     /**
-     * 接受坐标坐标
+     * 接受坐标
      */
     public static Point acceptIcon = new Point(1920, 1480);
+    /**
+     * 退出坐标
+     */
+    public static Point quitIcon = new Point(1700, 1099);
     /**
      * 接受矩形
      */
@@ -93,7 +100,7 @@ public class Params {
     /**
      * 结束矩形
      */
-    public static Rectangle endRectangle = new Rectangle(1740, 1760, 80, 50);
+    public static Rectangle endRectangle = new Rectangle(1560, 1075, 188, 55);
     /**
      * 棋子矩形列表
      */
@@ -116,6 +123,18 @@ public class Params {
     public static List<RectangleTask> stageAndEndTasks = new ArrayList<>();
 
     /**
+     * 棋子坐标列表
+     */
+    public static List<Point> piecePoints = new ArrayList<>();
+
+    public static  String[] ownPieces = new String[9];
+
+    public static int experience = 0;
+
+    public static List<String> needPieces = new ArrayList<>();
+    public static LOLService lolService = new LOLService();
+
+    /**
      * 初始化数据
      */
     static {
@@ -128,6 +147,8 @@ public class Params {
             pieceRectangles.add(rectangle);
             pieceTasks.add(new PieceTask(rectangle, i));
             freshPieces.add(String.valueOf(i));
+            int x2 = 1200 + 403 * i;
+            piecePoints.add(new Point(x2, 2000));
         }
 
         int personNum = 8;
@@ -142,5 +163,14 @@ public class Params {
 
         stageAndEndTasks.add(new StageTask(stageRectangle));
         stageAndEndTasks.add(new EndTask(endRectangle));
+
+        needPieces.add("希瓦娜");
+        needPieces.add("瑟提");
+        needPieces.add("努努和威朗普");
+        needPieces.add("奥恩");
+        needPieces.add("科加斯");
+        needPieces.add("蔚");
+        needPieces.add("茂凯");
+        needPieces.add("塔姆");
     }
 }

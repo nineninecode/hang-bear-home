@@ -38,7 +38,7 @@ public class BloodTask extends RectangleTask {
         // 设置分辨率
         this.instance.setTessVariable("user_defined_dpi", "300");
         // 设置识别语言为简体中文
-        this.instance.setLanguage("eng");
+        this.instance.setLanguage("ara");
     }
 
     @Override
