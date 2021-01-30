@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+
 import com.wzh.lab.lol.task.AcceptCallable;
 import com.wzh.lab.utils.WinRobotUtils;
 
@@ -18,38 +19,51 @@ import com.wzh.lab.utils.WinRobotUtils;
  */
 @Slf4j
 public class StartChess {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         WinRobotUtils.leftMouseSinglePress(Params.lolIcon);
 
-        while (Params.isContinue) {
-            AcceptCallable acceptTask = new AcceptCallable();
-            Future<Boolean> submit = Params.executors.submit(acceptTask);
-            // acceptTask不执行完毕会阻塞
-            submit.get();
-            // 进入对局
-            while (true) {
-                Params.executors.invokeAll(Params.stageAndEndTasks, 2, TimeUnit.SECONDS);
-                long end;
-                if (Params.isPrepare) {
-                    end = System.currentTimeMillis() + 60 * 1000;
-                    // 识别血量，金币
-                    Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
-                    // 识别棋子
-                    // 阻塞等待，全部执行完毕返回，若超过两秒也返回
-                    Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
-                    Thread.sleep(end - System.currentTimeMillis());
-                } else if (Params.isEnd) {
-                    break;
-                } else {
-                    Thread.sleep(2000);
+        try {
+            while (Params.isContinue) {
+                AcceptCallable acceptTask = new AcceptCallable();
+                Future<Boolean> submit = Params.executors.submit(acceptTask);
+                // acceptTask不执行完毕会阻塞
+                submit.get();
+                // 进入对局
+                while (true) {
+                    long end;
+                    end = System.currentTimeMillis();
+                    Params.executors.invokeAll(Params.stageAndEndTasks, 2, TimeUnit.SECONDS);
+                    log.info("阶段识别耗时:{}毫秒", System.currentTimeMillis() - end);
+                    if (Params.isPrepare) {
+                        log.info("进入准备阶段");
+                        end = System.currentTimeMillis() + 60 * 1000;
+                        log.info("bloodAndMoneyTasks {}", Params.bloodAndMoneyTasks.size());
+                        log.info("pieceTasks {}", Params.pieceTasks.size());
+                        // 识别血量，金币
+                        Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
+                        // 识别棋子
+                        // 阻塞等待，全部执行完毕返回，若超过两秒也返回
+                        Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
+                        log.info("血量、棋子识别耗时:{}毫秒", System.currentTimeMillis() + 60 * 1000 - end);
+                        log.info("睡眠:{}毫秒", end - System.currentTimeMillis());
+                        Thread.sleep(end - System.currentTimeMillis());
+                    } else if (Params.isEnd) {
+                        break;
+                    } else {
+                        log.info("睡眠:2000毫秒");
+                        Thread.sleep(2000);
+                    }
+                    logInfo();
                 }
-                logInfo();
-            }
 
-            // Params.isContinue = Boolean.FALSE;
+                // Params.isContinue = Boolean.FALSE;
+            }
+            Params.executors.shutdown();
+        } catch (Exception e) {
+            log.error("错误:{}", e.getMessage(), e);
         }
-        Params.executors.shutdown();
+
         // 1.点击开始
         // 2.启动所有监控线程
         // 3.游戏开始
@@ -64,8 +78,8 @@ public class StartChess {
     }
 
     private static void logInfo() {
-        log.info("等级 {}，血量 {}，金币 {}", Params.level, Params.blood, Params.money);
-        log.info("棋子 {}", Params.freshPieces);
-        log.info("血量 {}", Params.freshBloods);
+        log.info("等级:{}，血量:{}，金币:{}", Params.level, Params.blood, Params.money);
+        log.info("棋子:{}", Params.freshPieces);
+        log.info("血量:{}", Params.freshBloods);
     }
 }

@@ -3,8 +3,10 @@ package com.wzh.lab.lol;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
-
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import com.wzh.lab.lol.task.*;
 
@@ -58,7 +60,7 @@ public class Params {
     /**
      * 刷新棋子列表
      */
-    public static List<String> freshPieces = new ArrayList<>();
+    public static volatile List<String> freshPieces = new ArrayList<>();
     /**
      * 刷新血量列表
      */
@@ -125,14 +127,16 @@ public class Params {
             Rectangle rectangle = new Rectangle(x, 2085, 280, 50);
             pieceRectangles.add(rectangle);
             pieceTasks.add(new PieceTask(rectangle, i));
+            freshPieces.add(String.valueOf(i));
         }
 
         int personNum = 8;
         for (int i = 0; i < personNum; i++) {
             int y = 422 + 143 * i;
             Rectangle rectangle = new Rectangle(3568, y, 90, 64);
-            pieceRectangles.add(rectangle);
+            bloodRectangles.add(rectangle);
             bloodAndMoneyTasks.add(new BloodTask(rectangle, i));
+            freshBloods.add(String.valueOf(i));
         }
         bloodAndMoneyTasks.add(new MoneyTask(moneyRectangle));
 

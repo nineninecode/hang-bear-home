@@ -5,9 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.awt.*;
 import java.util.concurrent.Callable;
 
-
-import com.wzh.lab.utils.ImageUtils;
-
 /**
  * <p>
  * 代码描述
@@ -35,7 +32,7 @@ public class RectangleTask implements Callable<Boolean> {
 
     @Override
     public Boolean call() throws Exception {
-        String content = ImageUtils.getContent(rectangle);
         return true;
     }
+
 }

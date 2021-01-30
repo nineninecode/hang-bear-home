@@ -57,7 +57,7 @@ public class OcrUtils {
     public static void main(String[] args) {
 
         PieceEnum yasuo = PieceEnum.KATLINNA;
-        String resourcePath = "D:/lab/img/";
+        String resourcePath = "D:/lab/lol/";
         String path = resourcePath + yasuo.getCode();
         List<File> files = FileReadUtils.getFiles(resourcePath);
         List<String> fileStrs = new ArrayList<>();
