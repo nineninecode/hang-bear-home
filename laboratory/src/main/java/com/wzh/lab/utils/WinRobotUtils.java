@@ -37,13 +37,23 @@ public class WinRobotUtils {
      *            位置坐标
      */
     public static void leftMouseSinglePress(Point point) {
+        moveMouse(point);
+        robot.mousePress(InputEvent.BUTTON1_MASK);
+        robot.delay(200);
+        robot.mouseRelease(InputEvent.BUTTON1_MASK);
+    }
+
+    /**
+     * 移动鼠标至某个坐标
+     *
+     * @param point
+     *            位置坐标
+     */
+    public static void moveMouse(Point point) {
         int x = new BigDecimal(point.x).divide(ratio, 2, BigDecimal.ROUND_HALF_UP).intValue();
         int y = new BigDecimal(point.y).divide(ratio, 2, BigDecimal.ROUND_HALF_UP).intValue();
         robot.mouseMove(-1, -1);
         robot.mouseMove(x, y);
-        robot.mousePress(InputEvent.BUTTON1_MASK);
-        robot.delay(200);
-        robot.mouseRelease(InputEvent.BUTTON1_MASK);
     }
 
     /**

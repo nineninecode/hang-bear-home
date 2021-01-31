@@ -38,13 +38,13 @@ public class StartChess {
                     if (Params.isPrepare) {
                         log.info("进入准备阶段");
                         end = System.currentTimeMillis() + 60 * 1000;
-                        log.info("bloodAndMoneyTasks {}", Params.bloodAndMoneyTasks.size());
-                        log.info("pieceTasks {}", Params.pieceTasks.size());
                         // 识别血量，金币
                         Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
+                        log.info("血量:{}，金币:{}",  Params.blood, Params.money);
                         // 识别棋子
                         // 阻塞等待，全部执行完毕返回，若超过两秒也返回
                         Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
+                        log.info("当前给出棋子:{}", Params.freshPieces);
                         log.info("血量、棋子识别耗时:{}毫秒", System.currentTimeMillis() + 60 * 1000 - end);
                         Params.lolService.playChess();
                         log.info("睡眠:{}毫秒", end - System.currentTimeMillis());

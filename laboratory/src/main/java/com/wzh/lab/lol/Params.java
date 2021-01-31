@@ -8,7 +8,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-
 import com.wzh.lab.lol.service.LOLService;
 import com.wzh.lab.lol.task.*;
 
@@ -127,7 +126,12 @@ public class Params {
      */
     public static List<Point> piecePoints = new ArrayList<>();
 
-    public static  String[] ownPieces = new String[9];
+    /**
+     * 备战区棋子坐标列表
+     */
+    public static List<Point> benchPiecePoints = new ArrayList<>();
+
+    public static String[] ownPieces = new String[9];
 
     public static int experience = 0;
 
@@ -163,6 +167,13 @@ public class Params {
 
         stageAndEndTasks.add(new StageTask(stageRectangle));
         stageAndEndTasks.add(new EndTask(endRectangle));
+
+        // 备战区，共9个位置
+        int benchNum = 9;
+        for (int i = 0; i < benchNum; i++) {
+            int x = 870 + 225 * i;
+            benchPiecePoints.add(new Point(x, 1550));
+        }
 
         needPieces.add("希瓦娜");
         needPieces.add("瑟提");

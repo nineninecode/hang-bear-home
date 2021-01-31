@@ -25,12 +25,14 @@ public class LOLService {
      * 下棋，备战环节流程
      */
     public void playChess() {
+        log.info("进入备战环节自动操作流程");
         // 经验自动+2
         Params.experience = Params.experience + 2;
         // 环节自动+1
         Params.stageNUm = Params.stageNUm + 1;
         calculateLevel();
-        //卖从左至右第一个空位的棋子
+        log.info("等级:{}，经验值：{}，环节数：{}", Params.level, Params.experience, Params.stageNUm);
+        // TODO 卖从左至右第一个空位的棋子，卖出选秀结果
 
         List<String> freshPieces = Params.freshPieces;
         // 自动刷新购买
@@ -40,12 +42,14 @@ public class LOLService {
             buyExperience();
             calculateLevel();
             Params.money = Params.money - 4;
+            log.info("固定升级，等级:{}，金币：{}，经验值：{}，", Params.level, Params.money, Params.experience);
         }
         // 7级之下50金币以上，购买经验
         while (Params.money > 53 && Params.level < 7) {
             buyExperience();
             calculateLevel();
             Params.money = Params.money - 4;
+            log.info("固定升级，等级:{}，金币：{}，经验值：{}，", Params.level, Params.money, Params.experience);
         }
 
         // 7级，刷完所有钱
@@ -53,8 +57,11 @@ public class LOLService {
             freshPiece();
             recognizePieces();
             freshPieces = Params.freshPieces;
+            log.info("刷新棋子:{}", Params.freshPieces);
             buyPiece(freshPieces);
         }
+
+        // 自动上棋子
 
     }
 
@@ -70,15 +77,23 @@ public class LOLService {
             if (Params.needPieces.contains(s)) {
                 // 购买
                 WinRobotUtils.leftMouseSinglePress(Params.piecePoints.get(i));
+                log.info("购买棋子:{}", s);
+                // 睡眠0.2秒。给与反应时间
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     /**
-     * 增加经验
+     * 增加经验，经验值+4
      */
     public void buyExperience() {
         WinRobotUtils.pressKey(KeyEvent.VK_F);
+        Params.experience = Params.experience + 4;
     }
 
     /**
@@ -95,6 +110,25 @@ public class LOLService {
         try {
             Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 卖出板凳席上的棋子
+     * 
+     * @param index
+     *            板凳号
+     */
+    private void saleBenchPiece(int index) {
+        // 移动
+        WinRobotUtils.moveMouse(Params.benchPiecePoints.get(index));
+        // 卖出
+        WinRobotUtils.pressKey(KeyEvent.VK_E);
+        // 睡眠0.2秒。给与反应时间
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
@@ -126,7 +160,7 @@ public class LOLService {
         else if (Params.experience > 71 && Params.experience < 119) {
             Params.level = 7;
         }
-        // 8级800经验
+        // 8级80经验
         else if (Params.experience > 119 && Params.experience < 177) {
             Params.level = 8;
         }
