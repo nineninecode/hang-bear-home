@@ -30,7 +30,9 @@ public class StartChess {
                 // acceptTask不执行完毕会阻塞
                 submit.get();
                 // 进入对局
+                log.info("进入对局{}", Params.roundNum);
                 while (true) {
+                    Params.roundNum = Params.roundNum + 1;
                     long end;
                     end = System.currentTimeMillis();
                     Params.executors.invokeAll(Params.stageAndEndTasks, 2, TimeUnit.SECONDS);
@@ -39,15 +41,16 @@ public class StartChess {
                         log.info("进入准备阶段");
                         end = System.currentTimeMillis() + 60 * 1000;
                         // 识别血量，金币
-                        Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
-                        log.info("血量:{}，金币:{}",  Params.blood, Params.money);
+                        // Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
+                        // Params.executors.invoke(Params.bloodAndMoneyTasks.get(8), 2, TimeUnit.SECONDS);
+                        log.info("血量:{}，金币:{}", Params.blood, Params.money);
                         // 识别棋子
                         // 阻塞等待，全部执行完毕返回，若超过两秒也返回
                         Params.executors.invokeAll(Params.pieceTasks, 2, TimeUnit.SECONDS);
-                        log.info("当前给出棋子:{}", Params.freshPieces);
                         log.info("血量、棋子识别耗时:{}毫秒", System.currentTimeMillis() + 60 * 1000 - end);
+                        log.info("当前给出棋子:{}", Params.freshPieces);
                         Params.lolService.playChess();
-                        log.info("睡眠:{}毫秒", end - System.currentTimeMillis());
+                        log.info("准备阶段睡眠:{}毫秒", end - System.currentTimeMillis());
                         Thread.sleep(end - System.currentTimeMillis());
                     } else if (Params.isEnd) {
                         // 点击退出
@@ -58,10 +61,10 @@ public class StartChess {
                         Thread.sleep(2000);
                         break;
                     } else {
-                        log.info("睡眠:2000毫秒");
+                        log.info("阶段识别睡眠:2000毫秒");
                         Thread.sleep(2000);
                     }
-                    logInfo();
+                    // logInfo();
                 }
                 // 点击再来一局
                 WinRobotUtils.leftMouseSinglePress(Params.startIcon);

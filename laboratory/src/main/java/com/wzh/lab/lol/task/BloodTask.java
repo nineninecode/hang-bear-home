@@ -47,7 +47,7 @@ public class BloodTask extends RectangleTask {
         BufferedImage capture = robot.createScreenCapture(super.getRectangle());
         String content = instance.doOCR(capture);
         content = StringUtils.replaceBlank(content);
-        log.info("blood task {}", content);
+        log.debug("blood task {}", content);
         Params.freshBloods.set(index, content);
         if (content != null && !"".equals(content.trim())) {
             if (content.matches(numStr)) {

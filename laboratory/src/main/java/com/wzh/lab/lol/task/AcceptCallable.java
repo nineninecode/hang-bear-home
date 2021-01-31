@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Callable;
 
+
 import com.wzh.lab.lol.Params;
 import com.wzh.lab.utils.ImageUtils;
 import com.wzh.lab.utils.WinRobotUtils;
@@ -27,7 +28,7 @@ public class AcceptCallable implements Callable<Boolean> {
         WinRobotUtils.leftMouseSinglePress(Params.startIcon);
         while (true) {
             String content = ImageUtils.getContent(Params.acceptRectangle);
-            log.info("接受位置数据 {}", content);
+            log.debug("寻找对局:{}", content);
             accept = content.contains("接受");
             if (accept) {
                 WinRobotUtils.leftMouseSinglePress(Params.acceptIcon);

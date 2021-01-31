@@ -134,6 +134,7 @@ public class Params {
     public static String[] ownPieces = new String[9];
 
     public static int experience = 0;
+    public static int roundNum= 1;
 
     public static List<String> needPieces = new ArrayList<>();
     public static LOLService lolService = new LOLService();

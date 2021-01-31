@@ -38,22 +38,20 @@ public class LOLService {
         // 自动刷新购买
         buyPiece(freshPieces);
         // 固定升级
-        if (Params.experience == 4 || Params.experience == 14) {
+        if ((Params.experience == 4 || Params.experience == 14)&&(Params.money>3)) {
             buyExperience();
             calculateLevel();
-            Params.money = Params.money - 4;
             log.info("固定升级，等级:{}，金币：{}，经验值：{}，", Params.level, Params.money, Params.experience);
         }
         // 7级之下50金币以上，购买经验
         while (Params.money > 53 && Params.level < 7) {
             buyExperience();
             calculateLevel();
-            Params.money = Params.money - 4;
-            log.info("固定升级，等级:{}，金币：{}，经验值：{}，", Params.level, Params.money, Params.experience);
+            log.info("7级之下50金币以上，等级:{}，金币：{}，经验值：{}，", Params.level, Params.money, Params.experience);
         }
 
         // 7级，刷完所有钱
-        if (Params.money > 10 && Params.level > 6) {
+        while (Params.money > 10 && Params.level > 6) {
             freshPiece();
             recognizePieces();
             freshPieces = Params.freshPieces;
@@ -89,11 +87,12 @@ public class LOLService {
     }
 
     /**
-     * 增加经验，经验值+4
+     * 增加经验，经验值+4，金币-4
      */
     public void buyExperience() {
         WinRobotUtils.pressKey(KeyEvent.VK_F);
         Params.experience = Params.experience + 4;
+        Params.money = Params.money - 4;
     }
 
     /**

@@ -45,7 +45,7 @@ public class MoneyTask extends RectangleTask {
         BufferedImage capture = robot.createScreenCapture(super.getRectangle());
         String content = instance.doOCR(capture);
         content = StringUtils.replaceBlank(content);
-        log.info("money task {}", content);
+        log.debug("money task {}", content);
         if (content != null && !"".equals(content.trim())) {
             if (content.matches(numStr)) {
                 Params.money = Integer.parseInt(content);

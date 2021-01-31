@@ -44,7 +44,7 @@ public class StageTask extends RectangleTask {
         BufferedImage capture = robot.createScreenCapture(super.getRectangle());
         String content = instance.doOCR(capture);
         content = StringUtils.replaceBlank(content);
-        log.info("stage task:{}", content);
+        log.debug("stage task:{}", content);
         Params.stage = content;
         Params.isPrepare = content.contains(Params.prepareStage);
         return true;

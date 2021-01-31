@@ -47,7 +47,7 @@ public class PieceTask extends RectangleTask {
         BufferedImage capture = robot.createScreenCapture(super.getRectangle());
         String content = instance.doOCR(capture);
         content = StringUtils.replaceBlank(content);
-        log.info("PieceTask task:{}", content);
+        log.debug("PieceTask task:{}", content);
         Params.freshPieces.set(index, content);
         return true;
     }
