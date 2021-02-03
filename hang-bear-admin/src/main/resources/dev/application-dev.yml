@@ -1,7 +1,8 @@
 server:
   port: 9090
   servlet:
-    context-path: /hang-bear-home
+    context-path: /@artifactId@
+#    context-path: /hang-bear-home
 
 # mybatis-plus
 mybatis-plus:

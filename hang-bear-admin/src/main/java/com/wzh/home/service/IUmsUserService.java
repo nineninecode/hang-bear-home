@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wzh.home.entity.form.UserEditForm;
 import com.wzh.home.entity.form.UserPasswordForm;
 import com.wzh.home.entity.po.UmsUser;
+import com.wzh.home.entity.vo.UmsUserVO;
 
 /**
  * <p>
@@ -14,6 +15,15 @@ import com.wzh.home.entity.po.UmsUser;
  * @since 2021-01-06
  */
 public interface IUmsUserService extends IService<UmsUser> {
+
+    /**
+     * 根据用户id获取用户信息
+     * 
+     * @param id
+     *            用户id
+     * @return 用户信息
+     */
+    UmsUserVO getUserById(Long id);
 
     /**
      * 新增注册用户信息
