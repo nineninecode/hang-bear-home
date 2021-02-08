@@ -17,6 +17,7 @@ import com.wzh.home.config.properties.CustomProperties;
 import com.wzh.home.entity.form.UserEditForm;
 import com.wzh.home.entity.form.UserPasswordForm;
 import com.wzh.home.entity.po.UmsUser;
+import com.wzh.home.entity.vo.UmsUserVO;
 import com.wzh.home.exception.BizException;
 import com.wzh.home.mapper.UmsUserMapper;
 import com.wzh.home.service.IUmsUserService;
@@ -37,6 +38,24 @@ public class IUmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> imp
     private PasswordEncoder passwordEncoder;
     @Autowired
     private CustomProperties customProperties;
+
+    /**
+     * 根据用户id获取用户信息
+     *
+     * @param id
+     *            用户id
+     * @return 用户信息
+     */
+    @Override
+    public UmsUserVO getUserById(Long id) {
+        UmsUserVO umsUserVO = new UmsUserVO();
+        UmsUser byId = this.getById(id);
+        if (Objects.isNull(byId)) {
+            throw new BizException("用户不存在！");
+        }
+        BeanUtils.copyProperties(byId, umsUserVO);
+        return umsUserVO;
+    }
 
     /**
      * 新增注册用户信息

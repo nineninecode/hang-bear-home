@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.wzh.home.entity.form.UserEditForm;
 import com.wzh.home.entity.form.UserPasswordForm;
 import com.wzh.home.entity.result.BaseResult;
+import com.wzh.home.entity.vo.UmsUserVO;
 import com.wzh.home.service.IUmsUserService;
 
 /**
@@ -27,13 +28,26 @@ public class UmsUserController {
     private IUmsUserService iUmsUserService;
 
     /**
+     * 获取用户信息
+     * 
+     * @param id
+     *            用户id
+     * @return 注册结果
+     */
+    @GetMapping("/get/{id}")
+    public BaseResult<UmsUserVO> get(@PathVariable Long id) {
+        log.info("user get id:{}", id);
+        return BaseResult.success(iUmsUserService.getUserById(id));
+    }
+
+    /**
      * 新增注册用户
      * 
      * @param userEditForm
      *            注册用户信息
      * @return 注册结果
      */
-    @PostMapping
+    @PostMapping("/add")
     public BaseResult<Boolean> add(@Validated @RequestBody UserEditForm userEditForm) {
         log.info("userEditForm:{}", userEditForm);
         return BaseResult.success(iUmsUserService.addUmsUser(userEditForm));
