@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 
 import com.wzh.lab.lol.Params;
+import com.wzh.lab.lol.enums.PieceMoneyConstant;
 import com.wzh.lab.utils.WinRobotUtils;
 
 /**
@@ -38,7 +39,7 @@ public class LOLService {
         // 自动刷新购买
         buyPiece(freshPieces);
         // 固定升级
-        if ((Params.experience == 4 || Params.experience == 14)&&(Params.money>3)) {
+        if ((Params.experience == 4 || Params.experience == 14) && (Params.money > 3)) {
             buyExperience();
             calculateLevel();
             log.info("固定升级，等级:{}，金币：{}，经验值：{}，", Params.level, Params.money, Params.experience);
@@ -75,6 +76,8 @@ public class LOLService {
             if (Params.needPieces.contains(s)) {
                 // 购买
                 WinRobotUtils.leftMouseSinglePress(Params.piecePoints.get(i));
+                Integer integer = PieceMoneyConstant.pieceMoneyMap.get(s);
+                Params.money = Params.money - integer;
                 log.info("购买棋子:{}", s);
                 // 睡眠0.2秒。给与反应时间
                 try {
@@ -100,6 +103,7 @@ public class LOLService {
      */
     public void freshPiece() {
         WinRobotUtils.pressKey(KeyEvent.VK_D);
+        Params.money = Params.money - 2;
     }
 
     /**

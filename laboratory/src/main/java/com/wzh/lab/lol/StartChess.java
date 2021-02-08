@@ -43,6 +43,8 @@ public class StartChess {
                         // 识别血量，金币
                         // Params.executors.invokeAll(Params.bloodAndMoneyTasks, 2, TimeUnit.SECONDS);
                         // Params.executors.invoke(Params.bloodAndMoneyTasks.get(8), 2, TimeUnit.SECONDS);
+                        Future<Boolean> submit1 = Params.executors.submit(Params.bloodAndMoneyTasks.get(8));
+                        submit1.get();
                         log.info("血量:{}，金币:{}", Params.blood, Params.money);
                         // 识别棋子
                         // 阻塞等待，全部执行完毕返回，若超过两秒也返回
