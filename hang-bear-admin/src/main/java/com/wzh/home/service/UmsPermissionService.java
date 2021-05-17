@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import com.wzh.home.entity.bo.PermissionBo;
+import org.springframework.context.annotation.Primary;
 
 /**
  * <p>
@@ -13,6 +14,7 @@ import com.wzh.home.entity.bo.PermissionBo;
  * @author weizhuohang
  * @since 2020/11/30 11:20
  */
+@Primary
 public interface UmsPermissionService {
 
     /**

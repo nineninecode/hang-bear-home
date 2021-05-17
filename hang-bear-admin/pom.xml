@@ -11,5 +11,19 @@
 
     <artifactId>hang-bear-admin</artifactId>
 
+    <dependencies>
+        <!--Jedis 实现-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.9.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+    </dependencies>
+
 
 </project>
