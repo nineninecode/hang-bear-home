@@ -18,6 +18,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @TableName("ums_user")
 public class UmsUser extends BasePo {
 
+    private static final long serialVersionUID = 3157772192041986654L;
+
     /**
      * 登录账号
      */
@@ -42,5 +44,10 @@ public class UmsUser extends BasePo {
      * 昵称
      */
     private String nickName;
+
+    /**
+     * 数量
+     */
+    private Integer updateCount;
 
 }

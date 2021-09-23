@@ -2,6 +2,8 @@ package com.wzh.home.entity.vo;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * <p>
  *
@@ -42,4 +44,6 @@ public class ItemVo {
      * 出货数量
      */
     private Integer shippingQty;
+
+    private Date changeTime;
 }

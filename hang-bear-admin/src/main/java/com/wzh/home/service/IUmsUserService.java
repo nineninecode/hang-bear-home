@@ -6,7 +6,6 @@ import com.wzh.home.entity.form.UserPasswordForm;
 import com.wzh.home.entity.po.UmsUser;
 import com.wzh.home.entity.vo.ItemVo;
 import com.wzh.home.entity.vo.UmsUserVO;
-import org.springframework.context.annotation.Primary;
 
 import java.util.List;
 
@@ -18,7 +17,6 @@ import java.util.List;
  * @author wzh
  * @since 2021-01-06
  */
-@Primary
 public interface IUmsUserService extends IService<UmsUser> {
 
     /**
@@ -53,6 +51,24 @@ public interface IUmsUserService extends IService<UmsUser> {
      */
     Boolean resetUserPassword(String username);
 
+    /**
+     * mongoDB测试
+     *
+     * @return 列表
+     */
     List<ItemVo> mongoDBTest();
+
+    /**
+     * MP updateBatch测试
+     *
+     * @return 结果
+     */
+    Boolean updateUserBatch();
+
+    /**
+     * 更新数量
+     * @param num 数量
+     */
+    void updateCount(Integer num);
 
 }

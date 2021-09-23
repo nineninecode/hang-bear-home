@@ -1,10 +1,8 @@
 package com.wzh.home.mapper;
 
-import com.baomidou.mybatisplus.core.toolkit.Constants;
-import org.springframework.stereotype.Repository;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wzh.home.entity.po.UmsUser;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -14,6 +12,6 @@ import com.wzh.home.entity.po.UmsUser;
  * @author wzh
  * @since 2021-01-06
  */
-//@Repository
+@Repository
 public interface UmsUserMapper extends BaseMapper<UmsUser> {
 }

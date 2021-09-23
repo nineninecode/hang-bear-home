@@ -1,19 +1,16 @@
 package com.wzh.home.controller;
 
+import com.wzh.home.entity.form.UserEditForm;
+import com.wzh.home.entity.form.UserPasswordForm;
+import com.wzh.home.entity.result.BaseResult;
 import com.wzh.home.entity.vo.ItemVo;
+import com.wzh.home.entity.vo.UmsUserVO;
 import com.wzh.home.service.impl.IUmsUserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import com.wzh.home.entity.form.UserEditForm;
-import com.wzh.home.entity.form.UserPasswordForm;
-import com.wzh.home.entity.result.BaseResult;
-import com.wzh.home.entity.vo.UmsUserVO;
-import com.wzh.home.service.IUmsUserService;
 
 import java.util.List;
 
@@ -37,7 +34,8 @@ public class UmsUserController implements BeanNameAware {
     /**
      * 获取用户信息
      *
-     * @param id 用户id
+     * @param id
+     *            用户id
      * @return 注册结果
      */
     @GetMapping("/get/{id}")
@@ -51,7 +49,8 @@ public class UmsUserController implements BeanNameAware {
     /**
      * 新增注册用户
      *
-     * @param userEditForm 注册用户信息
+     * @param userEditForm
+     *            注册用户信息
      * @return 注册结果
      */
     @PostMapping("/add")
@@ -63,7 +62,8 @@ public class UmsUserController implements BeanNameAware {
     /**
      * 修改密码
      *
-     * @param userPasswordForm 密码信息表单
+     * @param userPasswordForm
+     *            密码信息表单
      * @return 修改结果
      */
     @PutMapping("/update-password")
@@ -75,7 +75,8 @@ public class UmsUserController implements BeanNameAware {
     /**
      * 重置密码
      *
-     * @param userPasswordForm 密码信息表单
+     * @param userPasswordForm
+     *            密码信息表单
      * @return 重置结果
      */
     @PutMapping("/reset-password")
@@ -92,5 +93,16 @@ public class UmsUserController implements BeanNameAware {
     @GetMapping("/mongo-test")
     public BaseResult<List<ItemVo>> mongoTest() {
         return BaseResult.success(iUmsUserService.mongoDBTest());
+    }
+
+    @GetMapping("/save-test")
+    public BaseResult<Boolean> saveTest() {
+        Boolean aBoolean = iUmsUserService.updateUserBatch();
+        return BaseResult.success(aBoolean);
+    }
+
+    @GetMapping("/update")
+    public void updateCount(@RequestParam Integer num) {
+        iUmsUserService.updateCount(num);
     }
 }

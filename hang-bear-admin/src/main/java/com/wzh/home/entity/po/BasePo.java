@@ -1,14 +1,10 @@
 package com.wzh.home.entity.po;
 
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 
 /**
  * <p>
@@ -21,7 +17,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 @Data
 public class BasePo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1946624737813135560L;
 
     /**
      * 主键id
@@ -64,5 +60,17 @@ public class BasePo implements Serializable {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedTime;
+
+    /**
+     * 逻辑删除，删除标记:0-未删除，1-删除
+     */
+    @TableLogic
+    private Integer deleteFlag;
+
+    /**
+     * 乐观锁
+     */
+    @Version
+    private Integer version;
 
 }
