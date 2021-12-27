@@ -3,7 +3,6 @@ package com.wzh.home.controller;
 import com.wzh.home.entity.form.UserEditForm;
 import com.wzh.home.entity.form.UserPasswordForm;
 import com.wzh.home.entity.result.BaseResult;
-import com.wzh.home.entity.vo.ItemVo;
 import com.wzh.home.entity.vo.UmsUserVO;
 import com.wzh.home.service.impl.IUmsUserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>
