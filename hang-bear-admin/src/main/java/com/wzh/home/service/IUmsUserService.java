@@ -52,13 +52,6 @@ public interface IUmsUserService extends IService<UmsUser> {
     Boolean resetUserPassword(String username);
 
     /**
-     * mongoDB测试
-     *
-     * @return 列表
-     */
-    List<ItemVo> mongoDBTest();
-
-    /**
      * MP updateBatch测试
      *
      * @return 结果

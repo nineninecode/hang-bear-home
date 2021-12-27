@@ -12,7 +12,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wzh.home.config.properties.CustomProperties;
 import com.wzh.home.entity.form.UserEditForm;
 import com.wzh.home.entity.form.UserPasswordForm;
-import com.wzh.home.entity.po.LogInventory;
 import com.wzh.home.entity.po.UmsPermission;
 import com.wzh.home.entity.po.UmsUser;
 import com.wzh.home.entity.vo.ItemVo;
@@ -26,18 +25,10 @@ import org.apache.ibatis.binding.MapperMethod;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.aggregation.AggregationResults;
-import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,8 +51,8 @@ public class IUmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> imp
     @Autowired
     private CustomProperties customProperties;
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    //@Autowired
+    //private MongoTemplate mongoTemplate;
 
     private String beanName;
 
@@ -167,48 +158,6 @@ public class IUmsUserServiceImpl extends ServiceImpl<UmsUserMapper, UmsUser> imp
         return this.updateById(one);
     }
 
-    @Override
-    public List<ItemVo> mongoDBTest() {
-        List<ItemVo> itemVoList = new ArrayList<>();
-        Criteria criteria = Criteria.where("warehouseCode").is("WH0120");
-        // criteria.and("ownerCode").is("XF");
-        criteria.and("actionType").is(19);
-        List<Criteria> andCriteriaList = new ArrayList<>();
-        LocalDate startDate = LocalDate.now();
-        LocalDate localDate = startDate.minusDays(6L);
-        LocalTime time = LocalTime.of(19, 0, 0);
-        LocalTime time2 = LocalTime.of(20, 0, 0);
-        LocalDateTime startDateTime = LocalDateTime.of(localDate, time);
-        long until = time.until(time2, ChronoUnit.SECONDS);
-        log.info("时间：{}", until);
-        LocalDate endDate = localDate;
-        if (until < 0) {
-            // 跨天
-            endDate = endDate.plusDays(1L);
-        }
-        LocalDateTime endDateTime = LocalDateTime.of(endDate, time2);
-        startDateTime = startDateTime.plusHours(8L);
-        endDateTime = endDateTime.plusHours(8L);
-        log.info("开始时间：{}", startDateTime);
-        log.info("截止时间：{}", endDateTime);
-        // 开始时间
-        andCriteriaList.add(Criteria.where("changeTime").gte(startDateTime));
-        // 结束时间
-        andCriteriaList.add(Criteria.where("changeTime").lte(endDateTime));
-        criteria.andOperator(andCriteriaList.toArray(new Criteria[] {}));
-        TypedAggregation<LogInventory> typedAggregation = TypedAggregation.newAggregation(LogInventory.class,
-            // TypedAggregation.match(criteria),
-            TypedAggregation.group("warehouseCode", "ownerCode", "ownerItemCode").first("warehouseCode")
-                .as("warehouseCode").first("ownerCode").as("ownerCode").first("ownerItemCode").as("ownerItemCode")
-                .first("changeTime").as("changeTime").sum("changeStockQty").as("shippingQty"),
-            TypedAggregation.project("warehouseCode", "ownerCode", "ownerItemCode", "changeTime", "shippingQty"));
-        AggregationResults<ItemVo> aggregate = mongoTemplate.aggregate(typedAggregation, ItemVo.class);
-        itemVoList = aggregate.getMappedResults();
-        // LogInventory logInventory = new LogInventory();
-        // logInventory.setChangeTime(new Date());
-        // mongoTemplate.insert(logInventory);
-        return itemVoList;
-    }
 
     /**
      * MP updateBatch测试

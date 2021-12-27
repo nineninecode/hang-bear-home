@@ -90,10 +90,6 @@ public class UmsUserController implements BeanNameAware {
         this.name = s;
     }
 
-    @GetMapping("/mongo-test")
-    public BaseResult<List<ItemVo>> mongoTest() {
-        return BaseResult.success(iUmsUserService.mongoDBTest());
-    }
 
     @GetMapping("/save-test")
     public BaseResult<Boolean> saveTest() {
