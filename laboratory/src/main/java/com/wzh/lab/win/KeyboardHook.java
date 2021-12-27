@@ -1,14 +1,13 @@
 package com.wzh.lab.win;
 
-import lombok.extern.slf4j.Slf4j;
-
-import java.util.Objects;
-
-
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinUser;
+import lombok.extern.slf4j.Slf4j;
+
+import java.awt.event.KeyEvent;
+import java.util.Objects;
 
 /**
  * <p>
@@ -61,5 +60,7 @@ public class KeyboardHook implements Runnable {
         Thread keyHookThread = new Thread(keyHook);
         keyHookThread.start();
         log.info("keyHook start!");
+        int vkAlt = KeyEvent.VK_CONTROL  ;
+        log.info(String.valueOf(vkAlt));
     }
 }
